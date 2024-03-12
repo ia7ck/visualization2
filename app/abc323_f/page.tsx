@@ -401,7 +401,7 @@ export default function ABC323_F() {
             min={X_MIN}
             max={X_MAX}
             inputMode="numeric"
-            className={`block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+            className={`block w-full rounded-md border-0 mt-2 mb-6 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
               !startPositions.success &&
               startPositions.error.issues.some(
                 (issue) =>
