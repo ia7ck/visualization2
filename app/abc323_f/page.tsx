@@ -48,7 +48,6 @@ export default function ABC323_F() {
     cargo: { x: cargoXText, y: cargoYText },
     goal: { x: goalXText, y: goalYText },
   });
-  console.log(startPositions);
   const finish = cargo.x === goal.x && cargo.y === goal.y;
 
   useEffect(() => {
