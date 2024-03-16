@@ -109,40 +109,44 @@ export default function ABC337_E() {
                 const friends =
                   index === 0 ? (
                     <div className="grid grid-flow-col place-items-center">
-                      {row.map((_) => (
-                        <UserIcon className="inline-block h-10 w-10" />
+                      {row.map((_, i) => (
+                        // biome-ignore lint/suspicious/noArrayIndexKey: uum...
+                        <UserIcon key={i} className="inline-block h-10 w-10" />
                       ))}
                     </div>
                   ) : null;
                 return (
-                  <>
+                  // biome-ignore lint/suspicious/noArrayIndexKey: uum...
+                  <div key={index}>
                     {friends}
                     <div className="grid grid-flow-col place-items-center">
-                      {row
-                        .toReversed()
-                        .map((served) =>
-                          served ? (
-                            <CheckCircleIcon24Solid
-                              className={clsx(
-                                "inline-block h-10 w-10",
-                                spoiled.success && index + 1 === spoiled.data
-                                  ? "text-indigo-600"
-                                  : "text-gray-800",
-                              )}
-                            />
-                          ) : (
-                            <CheckCircleIconOutline
-                              className={clsx(
-                                "inline-block h-10 w-10",
-                                spoiled.success && index + 1 === spoiled.data
-                                  ? "text-indigo-200"
-                                  : "text-gray-200",
-                              )}
-                            />
-                          ),
-                        )}
+                      {row.toReversed().map((served, i) =>
+                        served ? (
+                          <CheckCircleIcon24Solid
+                            // biome-ignore lint/suspicious/noArrayIndexKey: uum...
+                            key={i}
+                            className={clsx(
+                              "inline-block h-10 w-10",
+                              spoiled.success && index + 1 === spoiled.data
+                                ? "text-indigo-600"
+                                : "text-gray-800",
+                            )}
+                          />
+                        ) : (
+                          <CheckCircleIconOutline
+                            // biome-ignore lint/suspicious/noArrayIndexKey: uum...
+                            key={i}
+                            className={clsx(
+                              "inline-block h-10 w-10",
+                              spoiled.success && index + 1 === spoiled.data
+                                ? "text-indigo-200"
+                                : "text-gray-200",
+                            )}
+                          />
+                        ),
+                      )}
                     </div>
-                  </>
+                  </div>
                 );
               })}
             </div>
