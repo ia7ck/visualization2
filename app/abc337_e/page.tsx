@@ -6,6 +6,7 @@ import {
   UserIcon,
 } from "@heroicons/react/24/outline";
 import { CheckCircleIcon as CheckCircleIcon24Solid } from "@heroicons/react/24/solid";
+import clsx from "clsx";
 import { StrictMode, useState } from "react";
 import { z } from "zod";
 
@@ -53,18 +54,18 @@ export default function ABC337_E() {
             min={BOTTLE_MIN}
             max={BOTTLE_MAX}
             inputMode="numeric"
-            className={`block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-              bottle.success
-                ? ""
-                : "text-red-900 ring-red-300 focus:ring-red-500" // overwrite
-            }`}
+            className={clsx(
+              "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
+              !bottle.success && "text-red-900 ring-red-300 focus:ring-red-500", // overwrite
+            )}
             value={bottleText}
             onChange={(e) => setBottleText(e.target.value)}
           />
           <p
-            className={`mt-2 text-sm text-gray-500 ${
-              bottle.success ? "" : "text-red-600"
-            }`}
+            className={clsx(
+              "mt-2 text-sm text-gray-500",
+              !bottle.success && "text-red-600",
+            )}
           >
             {BOTTLE_MIN} ≦ N ≦ {BOTTLE_MAX}
           </p>
@@ -81,18 +82,19 @@ export default function ABC337_E() {
             min={1}
             max={bottle.success ? bottle.data : undefined}
             inputMode="numeric"
-            className={`block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-              spoiled.success
-                ? ""
-                : "text-red-900 ring-red-300 focus:ring-red-500" // overwrite
-            }`}
+            className={clsx(
+              "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
+              !spoiled.success &&
+                "text-red-900 ring-red-300 focus:ring-red-500", // overwrite
+            )}
             value={spoiledText}
             onChange={(e) => setSpoiledText(e.target.value)}
           />
           <p
-            className={`mt-2 text-sm text-gray-500 ${
-              spoiled.success ? "" : "text-red-600"
-            }`}
+            className={clsx(
+              "mt-2 text-sm text-gray-500",
+              !spoiled.success && "text-red-600",
+            )}
           >
             1 ≦ X ≦ N
           </p>
@@ -121,19 +123,21 @@ export default function ABC337_E() {
                         .map((served) =>
                           served ? (
                             <CheckCircleIcon24Solid
-                              className={`inline-block h-10 w-10 ${
+                              className={clsx(
+                                "inline-block h-10 w-10",
                                 spoiled.success && index + 1 === spoiled.data
                                   ? "text-indigo-600"
-                                  : "text-gray-800"
-                              }`}
+                                  : "text-gray-800",
+                              )}
                             />
                           ) : (
                             <CheckCircleIconOutline
-                              className={`inline-block h-10 w-10 ${
+                              className={clsx(
+                                "inline-block h-10 w-10",
                                 spoiled.success && index + 1 === spoiled.data
                                   ? "text-indigo-200"
-                                  : "text-gray-200"
-                              }`}
+                                  : "text-gray-200",
+                              )}
                             />
                           ),
                         )}

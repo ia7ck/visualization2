@@ -2,6 +2,7 @@
 
 import { CubeIcon, FlagIcon, UserIcon } from "@heroicons/react/16/solid";
 import { ArrowUturnLeftIcon } from "@heroicons/react/16/solid";
+import clsx from "clsx";
 import { StrictMode, useEffect, useState } from "react";
 import { z } from "zod";
 
@@ -188,9 +189,10 @@ export default function ABC323_F() {
                       // biome-ignore lint/a11y/useKeyWithClickEvents: ;-;
                       <span
                         key={x}
-                        className={`inline-block h-6 w-6 border-l last:border-r border-gray-400 ${
-                          !finish && nextP ? "bg-green-100 cursor-pointer" : ""
-                        }`}
+                        className={clsx(
+                          "inline-block h-6 w-6 border-l last:border-r border-gray-400",
+                          !finish && nextP && "bg-green-100 cursor-pointer",
+                        )}
                         data-y={y}
                         data-x={x}
                         onClick={() => handleCellClick(nextP)}
@@ -256,17 +258,18 @@ export default function ABC323_F() {
             min={X_MIN}
             max={X_MAX}
             inputMode="numeric"
-            className={`block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+            className={clsx(
+              "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
               !startPositions.success &&
-              startPositions.error.issues.some(
-                (issue) =>
-                  (issue.path.includes("player") && issue.path.includes("x")) ||
-                  (issue.path.includes("player") &&
-                    issue.path.includes("cargo")),
-              )
-                ? "text-red-900 ring-red-300 focus:ring-red-500"
-                : ""
-            }`}
+                startPositions.error.issues.some(
+                  (issue) =>
+                    (issue.path.includes("player") &&
+                      issue.path.includes("x")) ||
+                    (issue.path.includes("player") &&
+                      issue.path.includes("cargo")),
+                ) &&
+                "text-red-900 ring-red-300 focus:ring-red-500",
+            )}
             value={playerXText}
             onChange={(e) => setPlayerXText(e.target.value)}
           />
@@ -286,17 +289,18 @@ export default function ABC323_F() {
             min={Y_MIN}
             max={Y_MAX}
             inputMode="numeric"
-            className={`block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+            className={clsx(
+              "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
               !startPositions.success &&
-              startPositions.error.issues.some(
-                (issue) =>
-                  (issue.path.includes("player") && issue.path.includes("y")) ||
-                  (issue.path.includes("player") &&
-                    issue.path.includes("cargo")),
-              )
-                ? "text-red-900 ring-red-300 focus:ring-red-500"
-                : ""
-            }`}
+                startPositions.error.issues.some(
+                  (issue) =>
+                    (issue.path.includes("player") &&
+                      issue.path.includes("y")) ||
+                    (issue.path.includes("player") &&
+                      issue.path.includes("cargo")),
+                ) &&
+                "text-red-900 ring-red-300 focus:ring-red-500",
+            )}
             value={playerYText}
             onChange={(e) => setPlayerYText(e.target.value)}
           />
@@ -316,15 +320,15 @@ export default function ABC323_F() {
             min={X_MIN}
             max={X_MAX}
             inputMode="numeric"
-            className={`block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+            className={clsx(
+              "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
               !startPositions.success &&
-              startPositions.error.issues.some(
-                (issue) =>
-                  issue.path.includes("cargo") && issue.path.includes("x"),
-              )
-                ? "text-red-900 ring-red-300 focus:ring-red-500"
-                : ""
-            }`}
+                startPositions.error.issues.some(
+                  (issue) =>
+                    issue.path.includes("cargo") && issue.path.includes("x"),
+                ) &&
+                "text-red-900 ring-red-300 focus:ring-red-500",
+            )}
             value={cargoXText}
             onChange={(e) => setCargoXText(e.target.value)}
           />
@@ -344,15 +348,15 @@ export default function ABC323_F() {
             min={X_MIN}
             max={X_MAX}
             inputMode="numeric"
-            className={`block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+            className={clsx(
+              "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
               !startPositions.success &&
-              startPositions.error.issues.some(
-                (issue) =>
-                  issue.path.includes("cargo") && issue.path.includes("y"),
-              )
-                ? "text-red-900 ring-red-300 focus:ring-red-500"
-                : ""
-            }`}
+                startPositions.error.issues.some(
+                  (issue) =>
+                    issue.path.includes("cargo") && issue.path.includes("y"),
+                ) &&
+                "text-red-900 ring-red-300 focus:ring-red-500",
+            )}
             value={cargoYText}
             onChange={(e) => setCargoYText(e.target.value)}
           />
@@ -372,16 +376,17 @@ export default function ABC323_F() {
             min={X_MIN}
             max={X_MAX}
             inputMode="numeric"
-            className={`block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+            className={clsx(
+              "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
               !startPositions.success &&
-              startPositions.error.issues.some(
-                (issue) =>
-                  (issue.path.includes("goal") && issue.path.includes("x")) ||
-                  (issue.path.includes("goal") && issue.path.includes("cargo")),
-              )
-                ? "text-red-900 ring-red-300 focus:ring-red-500"
-                : ""
-            }`}
+                startPositions.error.issues.some(
+                  (issue) =>
+                    (issue.path.includes("goal") && issue.path.includes("x")) ||
+                    (issue.path.includes("goal") &&
+                      issue.path.includes("cargo")),
+                ) &&
+                "text-red-900 ring-red-300 focus:ring-red-500",
+            )}
             value={goalXText}
             onChange={(e) => setGoalXText(e.target.value)}
           />
@@ -401,16 +406,17 @@ export default function ABC323_F() {
             min={X_MIN}
             max={X_MAX}
             inputMode="numeric"
-            className={`block w-full rounded-md border-0 mt-2 mb-6 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+            className={clsx(
+              "block w-full rounded-md border-0 mt-2 mb-6 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
               !startPositions.success &&
-              startPositions.error.issues.some(
-                (issue) =>
-                  (issue.path.includes("goal") && issue.path.includes("y")) ||
-                  (issue.path.includes("goal") && issue.path.includes("cargo")),
-              )
-                ? "text-red-900 ring-red-300 focus:ring-red-500"
-                : ""
-            }`}
+                startPositions.error.issues.some(
+                  (issue) =>
+                    (issue.path.includes("goal") && issue.path.includes("y")) ||
+                    (issue.path.includes("goal") &&
+                      issue.path.includes("cargo")),
+                ) &&
+                "text-red-900 ring-red-300 focus:ring-red-500",
+            )}
             value={goalYText}
             onChange={(e) => setGoalYText(e.target.value)}
           />

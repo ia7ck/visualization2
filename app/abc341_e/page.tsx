@@ -1,6 +1,7 @@
 "use client";
 
 import * as Slider from "@radix-ui/react-slider";
+import clsx from "clsx";
 import { StrictMode, useState } from "react";
 import { z } from "zod";
 
@@ -120,9 +121,10 @@ export default function ABC341_E() {
                 const inRange = range[0] <= index + 1 && index + 1 <= range[1];
                 return (
                   <span
-                    className={`inline-flex items-center rounded-md px-2 py-1 text-2xl font-medium ${
-                      flipEnabled && inRange ? "bg-red-100 text-red-700" : ""
-                    }`}
+                    className={clsx(
+                      "inline-flex items-center rounded-md px-2 py-1 text-2xl font-medium",
+                      flipEnabled && inRange && "bg-red-100 text-red-700",
+                    )}
                     // biome-ignore lint/suspicious/noArrayIndexKey: uum...
                     key={index}
                   >
@@ -142,9 +144,10 @@ export default function ABC341_E() {
                   index + 1 === range[0] - 1 || index + 1 === range[1];
                 return (
                   <span
-                    className={`inline-flex items-center rounded-md px-2 py-1 text-2xl font-medium ${
-                      flipEnabled && rangeBound ? "bg-red-100 text-red-700" : ""
-                    }`}
+                    className={clsx(
+                      "inline-flex items-center rounded-md px-2 py-1 text-2xl font-medium",
+                      flipEnabled && rangeBound && "bg-red-100 text-red-700",
+                    )}
                     // biome-ignore lint/suspicious/noArrayIndexKey: uum...
                     key={index}
                   >
