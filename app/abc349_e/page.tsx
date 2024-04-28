@@ -55,7 +55,7 @@ export default function ABC349_E() {
   if (state.step === "input") {
     const grid = string9ToOwner9(state.grid);
     if (grid !== null) {
-      const { result } = solve(grid, new Map());
+      const { result } = solve(grid);
       if (result === "first") {
         hint = "First-player win game";
       }
@@ -426,7 +426,7 @@ function string9ToOwner9(grid: String9): Owner9 | null {
 }
 
 function choosePosition(grid: Owner9): number {
-  const { index } = solve(structuredClone(grid), new Map());
+  const { index } = solve(structuredClone(grid));
   return randomChoice(index);
 }
 
@@ -434,7 +434,7 @@ type SolveReturnType = { index: number[]; result: Player | "draw" };
 
 function solve(
   grid: Owner9,
-  memo: Map<string, SolveReturnType>,
+  memo: Map<string, SolveReturnType> = new Map(),
 ): SolveReturnType {
   const key = JSON.stringify(grid);
   const value = memo.get(key);
