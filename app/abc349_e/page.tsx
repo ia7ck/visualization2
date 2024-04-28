@@ -98,7 +98,14 @@ export default function ABC349_E() {
             ...state.grid[p],
             player: player === "first" ? "second" : "first",
           };
-          setState({ step: "play", grid: newGrid });
+          if (rest < state.grid.length) {
+            setState({ step: "play", grid: newGrid });
+          } else {
+            // CPU first turn
+            setTimeout(() => {
+              setState({ step: "play", grid: newGrid });
+            }, 200);
+          }
         }
       }
     }
@@ -108,17 +115,9 @@ export default function ABC349_E() {
   // step: "input" -> "play"
   const handleStartButtonClick = () => {
     if (state.step === "input") {
-      const newGrid = string9ToOwner9(state.grid);
-      if (newGrid !== null) {
-        if (player === "second") {
-          // CPU first
-          const p = choosePosition(newGrid);
-          newGrid[p] = { ...newGrid[p], player: "first" };
-        }
-        setState({
-          step: "play",
-          grid: newGrid,
-        });
+      const grid = string9ToOwner9(state.grid);
+      if (grid !== null) {
+        setState({ step: "play", grid });
       }
     }
   };
@@ -361,6 +360,9 @@ function GridButton({
                   "grid place-items-center h-20 w-20 border-l last:border-r border-gray-400",
                   grid[index].player === "first" && "bg-rose-100",
                   grid[index].player === "second" && "bg-indigo-100",
+                  grid[index].player !== null &&
+                    grid[index].player !== player &&
+                    "transition-colors duration-500",
                   grid[index].player === null &&
                     isYourTurn &&
                     (player === "first"
