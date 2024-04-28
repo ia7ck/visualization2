@@ -222,7 +222,7 @@ export default function ABC349_E() {
             </button>
           </div>
           {state.step === "input" && hint && (
-            <div className="grid place-items-center mt-4">
+            <div className="grid place-items-center mt-2">
               <p className="text-sm text-gray-500">hint: {hint}</p>
             </div>
           )}
