@@ -50,6 +50,21 @@ export default function ABC349_E() {
   });
   const [player, setPlayer] = useState<Player>("first");
 
+  let hint = null;
+
+  if (state.step === "input") {
+    const grid = string9ToOwner9(state.grid);
+    if (grid !== null) {
+      const { result } = solve(grid, new Map());
+      if (result === "first") {
+        hint = "First-player win game";
+      }
+      if (result === "second") {
+        hint = "Second-player win game";
+      }
+    }
+  }
+
   let gameResult = null;
   let score = { first: 0, second: 0 };
 
@@ -207,6 +222,11 @@ export default function ABC349_E() {
               Start
             </button>
           </div>
+          {state.step === "input" && hint && (
+            <div className="grid place-items-center mt-4">
+              <p className="text-sm text-gray-500">hint: {hint}</p>
+            </div>
+          )}
           {state.step === "play" && (
             <>
               <div className="grid place-items-center mt-12">
@@ -404,11 +424,22 @@ function string9ToOwner9(grid: String9): Owner9 | null {
 }
 
 function choosePosition(grid: Owner9): number {
-  const { index } = solve(structuredClone(grid));
+  const { index } = solve(structuredClone(grid), new Map());
   return randomChoice(index);
 }
 
-function solve(grid: Owner9): { index: number[]; result: Player | "draw" } {
+type SolveReturnType = { index: number[]; result: Player | "draw" };
+
+function solve(
+  grid: Owner9,
+  memo: Map<string, SolveReturnType>,
+): SolveReturnType {
+  const key = JSON.stringify(grid);
+  const value = memo.get(key);
+  if (value !== undefined) {
+    return value;
+  }
+
   const result = judge(grid);
   if (result !== null) {
     return { index: [], result };
@@ -426,7 +457,7 @@ function solve(grid: Owner9): { index: number[]; result: Player | "draw" } {
       const index = i * 3 + j;
       if (grid[index].player === null) {
         grid[index].player = turn;
-        const { result } = solve(grid);
+        const { result } = solve(grid, memo);
         if (result === turn) {
           win.push(index);
         } else if (result === "draw") {
@@ -440,14 +471,23 @@ function solve(grid: Owner9): { index: number[]; result: Player | "draw" } {
   }
 
   if (win.length >= 1) {
-    return { index: win, result: turn };
+    const valueWin = { index: win, result: turn } as const;
+    memo.set(key, valueWin);
+    return valueWin;
   }
 
   if (draw.length >= 1) {
-    return { index: draw, result: "draw" };
+    const valueDraw = { index: draw, result: "draw" } as const;
+    memo.set(key, valueDraw);
+    return valueDraw;
   }
 
-  return { index: lose, result: turn === "first" ? "second" : "first" };
+  const valueLose = {
+    index: lose,
+    result: turn === "first" ? "second" : "first",
+  } as const;
+  memo.set(key, valueLose);
+  return valueLose;
 }
 
 function judge(grid: Owner9): Player | "draw" | null {
