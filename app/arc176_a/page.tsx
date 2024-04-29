@@ -66,107 +66,102 @@ export default function ARC176_A() {
 
   return (
     <StrictMode>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl">
-          <h1 className="mt-6 text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-            Problem
-          </h1>
-          <a
-            className="inline-block mt-2 leading-6 text-indigo-600 hover:text-indigo-500"
-            href="https://atcoder.jp/contests/arc176/tasks/arc176_a"
-            target="blank"
-          >
-            ARC176 A - 01 Matrix Again
-          </a>
-          <label
-            htmlFor="grid_size"
-            className="block mt-5 text-sm font-medium leading-6 text-gray-900"
-          >
-            Grid size <var>N</var>
-          </label>
-          <input
-            name="grid_size"
-            id="grid_size"
-            type="number"
-            min={N_MIN}
-            max={N_MAX}
-            inputMode="numeric"
-            className={clsx(
-              "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-              {
-                "text-red-900 ring-red-300 focus:ring-red-500":
-                  !gridSize.success,
-              },
-            )}
-            value={gridSizeText}
-            onChange={(e) => handleInputChange(e)}
-          />
-          <p
-            className={clsx("mt-2 text-sm text-gray-500", {
-              "text-red-600": !gridSize.success,
-            })}
-          >
-            {N_MIN} ≦ N ≦ {N_MAX}
-          </p>
-          <label
-            htmlFor="n_fire"
-            className="block mt-2 text-sm font-medium leading-6 text-gray-900"
-          >
-            Number of fire <var>M</var>
-          </label>
-          <input
-            name="n_fire"
-            id="n_fire"
-            type="number"
-            className="block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
-            value={positions.length}
-            readOnly={true}
-            disabled={true}
-          />
-          <p
-            className={clsx("mt-2 text-sm text-gray-500", {
-              invisible: !gridSize.success,
-            })}
-          >
-            0 ≦ M ≦ {gridSize.success ? gridSize.data : 0}
-          </p>
-          {gridSize.success && (
-            <div className="grid place-items-center mt-8 mb-8">
-              {range(0, gridSize.data - 1).map((i) => (
+      <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+        Problem
+      </h1>
+      <a
+        className="inline-block mt-2 leading-6 text-indigo-600 hover:text-indigo-500"
+        href="https://atcoder.jp/contests/arc176/tasks/arc176_a"
+        target="blank"
+      >
+        ARC176 A - 01 Matrix Again
+      </a>
+      <label
+        htmlFor="grid_size"
+        className="block mt-5 text-sm font-medium leading-6 text-gray-900"
+      >
+        Grid size <var>N</var>
+      </label>
+      <input
+        name="grid_size"
+        id="grid_size"
+        type="number"
+        min={N_MIN}
+        max={N_MAX}
+        inputMode="numeric"
+        className={clsx(
+          "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
+          {
+            "text-red-900 ring-red-300 focus:ring-red-500": !gridSize.success,
+          },
+        )}
+        value={gridSizeText}
+        onChange={(e) => handleInputChange(e)}
+      />
+      <p
+        className={clsx("mt-2 text-sm text-gray-500", {
+          "text-red-600": !gridSize.success,
+        })}
+      >
+        {N_MIN} ≦ N ≦ {N_MAX}
+      </p>
+      <label
+        htmlFor="n_fire"
+        className="block mt-2 text-sm font-medium leading-6 text-gray-900"
+      >
+        Number of fire <var>M</var>
+      </label>
+      <input
+        name="n_fire"
+        id="n_fire"
+        type="number"
+        className="block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
+        value={positions.length}
+        readOnly={true}
+        disabled={true}
+      />
+      <p
+        className={clsx("mt-2 text-sm text-gray-500", {
+          invisible: !gridSize.success,
+        })}
+      >
+        0 ≦ M ≦ {gridSize.success ? gridSize.data : 0}
+      </p>
+      {gridSize.success && (
+        <div className="grid place-items-center mt-8 mb-8">
+          {range(0, gridSize.data - 1).map((i) => (
+            <div
+              key={i}
+              className="grid grid-flow-col place-items-start border-t last:border-b border-gray-400"
+            >
+              {range(0, gridSize.data - 1).map((j) => (
+                // biome-ignore lint/a11y/useKeyWithClickEvents: ;_;
                 <div
-                  key={i}
-                  className="grid grid-flow-col place-items-start border-t last:border-b border-gray-400"
+                  key={j}
+                  className={clsx(
+                    "grid place-items-center h-8 w-8 border-l last:border-r border-gray-400",
+                    {
+                      "bg-indigo-100": filledPositions.some(
+                        (p) => p.i === i && p.j === j,
+                      ),
+                    },
+                    {
+                      "cursor-pointer":
+                        positions.length < gridSize.data ||
+                        positions.some((p) => p.i === i && p.j === j),
+                    },
+                  )}
+                  onClick={(_e) => handleCellClick({ i, j })}
                 >
-                  {range(0, gridSize.data - 1).map((j) => (
-                    // biome-ignore lint/a11y/useKeyWithClickEvents: ;_;
-                    <div
-                      key={j}
-                      className={clsx(
-                        "grid place-items-center h-8 w-8 border-l last:border-r border-gray-400",
-                        {
-                          "bg-indigo-100": filledPositions.some(
-                            (p) => p.i === i && p.j === j,
-                          ),
-                        },
-                        {
-                          "cursor-pointer":
-                            positions.length < gridSize.data ||
-                            positions.some((p) => p.i === i && p.j === j),
-                        },
-                      )}
-                      onClick={(_e) => handleCellClick({ i, j })}
-                    >
-                      {positions.some((p) => p.i === i && p.j === j) && (
-                        <FireIcon className="inline-block h-6 w-6" />
-                      )}
-                    </div>
-                  ))}
+                  {positions.some((p) => p.i === i && p.j === j) && (
+                    <FireIcon className="inline-block h-6 w-6" />
+                  )}
                 </div>
               ))}
             </div>
-          )}
+          ))}
         </div>
-      </div>
+      )}
     </StrictMode>
   );
 }

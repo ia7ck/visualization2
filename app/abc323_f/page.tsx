@@ -144,284 +144,271 @@ export default function ABC323_F() {
 
   return (
     <StrictMode>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl">
-          <h1 className="mt-6 text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-            Problem
-          </h1>
-          <a
-            className="inline-block mt-2 leading-6 text-indigo-600 hover:text-indigo-500"
-            href="https://atcoder.jp/contests/abc323/tasks/abc323_f"
-            target="blank"
-          >
-            ABC323 F - Push and Carry
-          </a>
-          <div className="grid place-items-center mt-4">
-            <button
-              type="button"
-              className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              onClick={handleGachaButtonClick}
-            >
-              Random
-            </button>
-          </div>
-          <div className="grid place-items-center mt-4">
-            {range(Y_MIN - 1, Y_MAX + 1)
-              .toReversed()
-              .map((y) => (
-                <div
-                  key={y}
-                  className="grid grid-flow-col place-items-start border-t last:border-b border-gray-400"
-                >
-                  {range(X_MIN - 1, X_MAX + 1).map((x) => {
-                    let icon = null;
-                    if (x === player.x && y === player.y) {
-                      icon = <UserIcon className="inline-block h-6 w-6" />;
-                    } else if (x === cargo.x && y === cargo.y) {
-                      icon = <CubeIcon className="inline-block h-6 w-6" />;
-                    } else if (x === goal.x && y === goal.y) {
-                      icon = <FlagIcon className="inline-block h-6 w-6" />;
-                    }
-                    const nextP = listNextPositions(player, cargo).find(
-                      ({ player }) => player.x === x && player.y === y,
-                    );
-                    return (
-                      // biome-ignore lint/a11y/useKeyWithClickEvents: ;-;
-                      <span
-                        key={x}
-                        className={clsx(
-                          "inline-block h-6 w-6 border-l last:border-r border-gray-400",
-                          !finish && nextP && "bg-green-100 cursor-pointer",
-                        )}
-                        data-y={y}
-                        data-x={x}
-                        onClick={() => handleCellClick(nextP)}
-                      >
-                        {icon}
-                      </span>
-                    );
-                  })}
-                </div>
-              ))}
-          </div>
-          <div className="grid mt-2">
-            <p className="text-center text-sm leading-6 text-gray-500">
-              You can move with WASD keys.
-            </p>
-            <p className="grid grid-cols-2 gap-x-1  text-gray-900">
-              <span className="text-right">actions:</span>
-              <span>
-                {actions} {finish && actions <= minActions && "🎉"}
-              </span>
-            </p>
-            <p className="grid grid-cols-2 gap-x-1 text-gray-900">
-              <span className="text-right">best:</span>
-              <span>{minActions}</span>
-            </p>
-          </div>
-          <div className="mt-4">
-            <button
-              type="button"
-              className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-300"
-              onClick={handleResetButtonClick}
-              disabled={!startPositions.success}
-            >
-              Reset to start positions
-              <ArrowUturnLeftIcon
-                className="-mr-0.5 h-4 w-4"
-                aria-hidden="true"
-              />
-            </button>
-          </div>
-          <p className="mt-2 text-sm text-gray-500">
-            {X_MIN} ≦ X<sub>A</sub>, X<sub>B</sub>, X<sub>C</sub> ≦ {X_MAX}
-            <br />
-            {Y_MIN} ≦ Y<sub>A</sub>, Y<sub>B</sub>, Y<sub>C</sub> ≦ {Y_MAX}
-            <br />
-            (X<sub>A</sub>, Y<sub>A</sub>) ≠ (X<sub>B</sub>, Y<sub>B</sub>)
-            <br />
-            (X<sub>B</sub>, Y<sub>B</sub>) ≠ (X<sub>C</sub>, Y<sub>C</sub>)
-          </p>
-          <label
-            htmlFor="player_x"
-            className="block mt-2 text-sm font-medium leading-6 text-gray-900"
-          >
-            Takahashi&nbsp;
-            <var>
-              X<sub>A</sub>
-            </var>
-          </label>
-          <input
-            name="player_x"
-            id="player_x"
-            type="number"
-            min={X_MIN}
-            max={X_MAX}
-            inputMode="numeric"
-            className={clsx(
-              "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-              !startPositions.success &&
-                startPositions.error.issues.some(
-                  (issue) =>
-                    (issue.path.includes("player") &&
-                      issue.path.includes("x")) ||
-                    (issue.path.includes("player") &&
-                      issue.path.includes("cargo")),
-                ) &&
-                "text-red-900 ring-red-300 focus:ring-red-500",
-            )}
-            value={playerXText}
-            onChange={(e) => setPlayerXText(e.target.value)}
-          />
-          <label
-            htmlFor="player_y"
-            className="block mt-5 text-sm font-medium leading-6 text-gray-900"
-          >
-            Takahashi&nbsp;
-            <var>
-              Y<sub>A</sub>
-            </var>
-          </label>
-          <input
-            name="player_y"
-            id="player_y"
-            type="number"
-            min={Y_MIN}
-            max={Y_MAX}
-            inputMode="numeric"
-            className={clsx(
-              "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-              !startPositions.success &&
-                startPositions.error.issues.some(
-                  (issue) =>
-                    (issue.path.includes("player") &&
-                      issue.path.includes("y")) ||
-                    (issue.path.includes("player") &&
-                      issue.path.includes("cargo")),
-                ) &&
-                "text-red-900 ring-red-300 focus:ring-red-500",
-            )}
-            value={playerYText}
-            onChange={(e) => setPlayerYText(e.target.value)}
-          />
-          <label
-            htmlFor="cargo_x"
-            className="block mt-5 text-sm font-medium leading-6 text-gray-900"
-          >
-            Cargo&nbsp;
-            <var>
-              X<sub>B</sub>
-            </var>
-          </label>
-          <input
-            name="cargo_x"
-            id="cargo_x"
-            type="number"
-            min={X_MIN}
-            max={X_MAX}
-            inputMode="numeric"
-            className={clsx(
-              "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-              !startPositions.success &&
-                startPositions.error.issues.some(
-                  (issue) =>
-                    issue.path.includes("cargo") && issue.path.includes("x"),
-                ) &&
-                "text-red-900 ring-red-300 focus:ring-red-500",
-            )}
-            value={cargoXText}
-            onChange={(e) => setCargoXText(e.target.value)}
-          />
-          <label
-            htmlFor="cargo_y"
-            className="block mt-5 text-sm font-medium leading-6 text-gray-900"
-          >
-            Cargo&nbsp;
-            <var>
-              Y<sub>B</sub>
-            </var>
-          </label>
-          <input
-            name="cargo_y"
-            id="cargo_y"
-            type="number"
-            min={X_MIN}
-            max={X_MAX}
-            inputMode="numeric"
-            className={clsx(
-              "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-              !startPositions.success &&
-                startPositions.error.issues.some(
-                  (issue) =>
-                    issue.path.includes("cargo") && issue.path.includes("y"),
-                ) &&
-                "text-red-900 ring-red-300 focus:ring-red-500",
-            )}
-            value={cargoYText}
-            onChange={(e) => setCargoYText(e.target.value)}
-          />
-          <label
-            htmlFor="goal_x"
-            className="block mt-5 text-sm font-medium leading-6 text-gray-900"
-          >
-            Goal&nbsp;
-            <var>
-              X<sub>C</sub>
-            </var>
-          </label>
-          <input
-            name="goal_x"
-            id="goal_x"
-            type="number"
-            min={X_MIN}
-            max={X_MAX}
-            inputMode="numeric"
-            className={clsx(
-              "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-              !startPositions.success &&
-                startPositions.error.issues.some(
-                  (issue) =>
-                    (issue.path.includes("goal") && issue.path.includes("x")) ||
-                    (issue.path.includes("goal") &&
-                      issue.path.includes("cargo")),
-                ) &&
-                "text-red-900 ring-red-300 focus:ring-red-500",
-            )}
-            value={goalXText}
-            onChange={(e) => setGoalXText(e.target.value)}
-          />
-          <label
-            htmlFor="goal_y"
-            className="block mt-5 text-sm font-medium leading-6 text-gray-900"
-          >
-            Goal&nbsp;
-            <var>
-              Y<sub>C</sub>
-            </var>
-          </label>
-          <input
-            name="goal_y"
-            id="goal_y"
-            type="number"
-            min={X_MIN}
-            max={X_MAX}
-            inputMode="numeric"
-            className={clsx(
-              "block w-full rounded-md border-0 mt-2 mb-6 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-              !startPositions.success &&
-                startPositions.error.issues.some(
-                  (issue) =>
-                    (issue.path.includes("goal") && issue.path.includes("y")) ||
-                    (issue.path.includes("goal") &&
-                      issue.path.includes("cargo")),
-                ) &&
-                "text-red-900 ring-red-300 focus:ring-red-500",
-            )}
-            value={goalYText}
-            onChange={(e) => setGoalYText(e.target.value)}
-          />
-        </div>
+      <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+        Problem
+      </h1>
+      <a
+        className="inline-block mt-2 leading-6 text-indigo-600 hover:text-indigo-500"
+        href="https://atcoder.jp/contests/abc323/tasks/abc323_f"
+        target="blank"
+      >
+        ABC323 F - Push and Carry
+      </a>
+      <div className="grid place-items-center mt-4">
+        <button
+          type="button"
+          className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+          onClick={handleGachaButtonClick}
+        >
+          Random
+        </button>
       </div>
+      <div className="grid place-items-center mt-4">
+        {range(Y_MIN - 1, Y_MAX + 1)
+          .toReversed()
+          .map((y) => (
+            <div
+              key={y}
+              className="grid grid-flow-col place-items-start border-t last:border-b border-gray-400"
+            >
+              {range(X_MIN - 1, X_MAX + 1).map((x) => {
+                let icon = null;
+                if (x === player.x && y === player.y) {
+                  icon = <UserIcon className="inline-block h-6 w-6" />;
+                } else if (x === cargo.x && y === cargo.y) {
+                  icon = <CubeIcon className="inline-block h-6 w-6" />;
+                } else if (x === goal.x && y === goal.y) {
+                  icon = <FlagIcon className="inline-block h-6 w-6" />;
+                }
+                const nextP = listNextPositions(player, cargo).find(
+                  ({ player }) => player.x === x && player.y === y,
+                );
+                return (
+                  // biome-ignore lint/a11y/useKeyWithClickEvents: ;-;
+                  <span
+                    key={x}
+                    className={clsx(
+                      "inline-block h-6 w-6 border-l last:border-r border-gray-400",
+                      !finish && nextP && "bg-green-100 cursor-pointer",
+                    )}
+                    data-y={y}
+                    data-x={x}
+                    onClick={() => handleCellClick(nextP)}
+                  >
+                    {icon}
+                  </span>
+                );
+              })}
+            </div>
+          ))}
+      </div>
+      <div className="grid mt-2">
+        <p className="text-center text-sm leading-6 text-gray-500">
+          You can move with WASD keys.
+        </p>
+        <p className="grid grid-cols-2 gap-x-1  text-gray-900">
+          <span className="text-right">actions:</span>
+          <span>
+            {actions} {finish && actions <= minActions && "🎉"}
+          </span>
+        </p>
+        <p className="grid grid-cols-2 gap-x-1 text-gray-900">
+          <span className="text-right">best:</span>
+          <span>{minActions}</span>
+        </p>
+      </div>
+      <div className="mt-4">
+        <button
+          type="button"
+          className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-300"
+          onClick={handleResetButtonClick}
+          disabled={!startPositions.success}
+        >
+          Reset to start positions
+          <ArrowUturnLeftIcon className="-mr-0.5 h-4 w-4" aria-hidden="true" />
+        </button>
+      </div>
+      <p className="mt-2 text-sm text-gray-500">
+        {X_MIN} ≦ X<sub>A</sub>, X<sub>B</sub>, X<sub>C</sub> ≦ {X_MAX}
+        <br />
+        {Y_MIN} ≦ Y<sub>A</sub>, Y<sub>B</sub>, Y<sub>C</sub> ≦ {Y_MAX}
+        <br />
+        (X<sub>A</sub>, Y<sub>A</sub>) ≠ (X<sub>B</sub>, Y<sub>B</sub>)
+        <br />
+        (X<sub>B</sub>, Y<sub>B</sub>) ≠ (X<sub>C</sub>, Y<sub>C</sub>)
+      </p>
+      <label
+        htmlFor="player_x"
+        className="block mt-2 text-sm font-medium leading-6 text-gray-900"
+      >
+        Takahashi&nbsp;
+        <var>
+          X<sub>A</sub>
+        </var>
+      </label>
+      <input
+        name="player_x"
+        id="player_x"
+        type="number"
+        min={X_MIN}
+        max={X_MAX}
+        inputMode="numeric"
+        className={clsx(
+          "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
+          !startPositions.success &&
+            startPositions.error.issues.some(
+              (issue) =>
+                (issue.path.includes("player") && issue.path.includes("x")) ||
+                (issue.path.includes("player") && issue.path.includes("cargo")),
+            ) &&
+            "text-red-900 ring-red-300 focus:ring-red-500",
+        )}
+        value={playerXText}
+        onChange={(e) => setPlayerXText(e.target.value)}
+      />
+      <label
+        htmlFor="player_y"
+        className="block mt-5 text-sm font-medium leading-6 text-gray-900"
+      >
+        Takahashi&nbsp;
+        <var>
+          Y<sub>A</sub>
+        </var>
+      </label>
+      <input
+        name="player_y"
+        id="player_y"
+        type="number"
+        min={Y_MIN}
+        max={Y_MAX}
+        inputMode="numeric"
+        className={clsx(
+          "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
+          !startPositions.success &&
+            startPositions.error.issues.some(
+              (issue) =>
+                (issue.path.includes("player") && issue.path.includes("y")) ||
+                (issue.path.includes("player") && issue.path.includes("cargo")),
+            ) &&
+            "text-red-900 ring-red-300 focus:ring-red-500",
+        )}
+        value={playerYText}
+        onChange={(e) => setPlayerYText(e.target.value)}
+      />
+      <label
+        htmlFor="cargo_x"
+        className="block mt-5 text-sm font-medium leading-6 text-gray-900"
+      >
+        Cargo&nbsp;
+        <var>
+          X<sub>B</sub>
+        </var>
+      </label>
+      <input
+        name="cargo_x"
+        id="cargo_x"
+        type="number"
+        min={X_MIN}
+        max={X_MAX}
+        inputMode="numeric"
+        className={clsx(
+          "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
+          !startPositions.success &&
+            startPositions.error.issues.some(
+              (issue) =>
+                issue.path.includes("cargo") && issue.path.includes("x"),
+            ) &&
+            "text-red-900 ring-red-300 focus:ring-red-500",
+        )}
+        value={cargoXText}
+        onChange={(e) => setCargoXText(e.target.value)}
+      />
+      <label
+        htmlFor="cargo_y"
+        className="block mt-5 text-sm font-medium leading-6 text-gray-900"
+      >
+        Cargo&nbsp;
+        <var>
+          Y<sub>B</sub>
+        </var>
+      </label>
+      <input
+        name="cargo_y"
+        id="cargo_y"
+        type="number"
+        min={X_MIN}
+        max={X_MAX}
+        inputMode="numeric"
+        className={clsx(
+          "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
+          !startPositions.success &&
+            startPositions.error.issues.some(
+              (issue) =>
+                issue.path.includes("cargo") && issue.path.includes("y"),
+            ) &&
+            "text-red-900 ring-red-300 focus:ring-red-500",
+        )}
+        value={cargoYText}
+        onChange={(e) => setCargoYText(e.target.value)}
+      />
+      <label
+        htmlFor="goal_x"
+        className="block mt-5 text-sm font-medium leading-6 text-gray-900"
+      >
+        Goal&nbsp;
+        <var>
+          X<sub>C</sub>
+        </var>
+      </label>
+      <input
+        name="goal_x"
+        id="goal_x"
+        type="number"
+        min={X_MIN}
+        max={X_MAX}
+        inputMode="numeric"
+        className={clsx(
+          "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
+          !startPositions.success &&
+            startPositions.error.issues.some(
+              (issue) =>
+                (issue.path.includes("goal") && issue.path.includes("x")) ||
+                (issue.path.includes("goal") && issue.path.includes("cargo")),
+            ) &&
+            "text-red-900 ring-red-300 focus:ring-red-500",
+        )}
+        value={goalXText}
+        onChange={(e) => setGoalXText(e.target.value)}
+      />
+      <label
+        htmlFor="goal_y"
+        className="block mt-5 text-sm font-medium leading-6 text-gray-900"
+      >
+        Goal&nbsp;
+        <var>
+          Y<sub>C</sub>
+        </var>
+      </label>
+      <input
+        name="goal_y"
+        id="goal_y"
+        type="number"
+        min={X_MIN}
+        max={X_MAX}
+        inputMode="numeric"
+        className={clsx(
+          "block w-full rounded-md border-0 mt-2 mb-6 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
+          !startPositions.success &&
+            startPositions.error.issues.some(
+              (issue) =>
+                (issue.path.includes("goal") && issue.path.includes("y")) ||
+                (issue.path.includes("goal") && issue.path.includes("cargo")),
+            ) &&
+            "text-red-900 ring-red-300 focus:ring-red-500",
+        )}
+        value={goalYText}
+        onChange={(e) => setGoalYText(e.target.value)}
+      />
     </StrictMode>
   );
 }

@@ -124,132 +124,122 @@ export default function ABC349_E() {
 
   return (
     <StrictMode>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl">
-          <h1 className="mt-6 text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-            Problem
-          </h1>
-          <a
-            className="inline-block mt-2 leading-6 text-indigo-600 hover:text-indigo-500"
-            href="https://atcoder.jp/contests/abc349/tasks/abc349_e"
-            target="blank"
+      <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+        Problem
+      </h1>
+      <a
+        className="inline-block mt-2 leading-6 text-indigo-600 hover:text-indigo-500"
+        href="https://atcoder.jp/contests/abc349/tasks/abc349_e"
+        target="blank"
+      >
+        ABC349 E - Weighted Tic-Tac-Toe
+      </a>
+      {state.step === "input" ? (
+        <>
+          <GridInput
+            grid={state.grid}
+            setGrid={(newGrid) => setState({ ...state, grid: newGrid })}
+          />
+        </>
+      ) : (
+        <>
+          <GridButton
+            player={player}
+            grid={state.grid}
+            setGrid={(newGrid) => setState({ ...state, grid: newGrid })}
+          />
+        </>
+      )}
+      <div className="grid place-items-center mt-2">
+        <p className="text-sm text-gray-500">
+          {A_MIN} ≦ A<sub>i,j</sub> ≦ {A_MAX}
+        </p>
+      </div>
+      <div className="grid place-items-center mt-4">
+        <label className="text-base font-semibold text-gray-900">
+          Your Hand
+        </label>
+      </div>
+      <div className="mt-2 space-y-2 sm:flex sm:items-center sm:justify-center sm:space-x-10 sm:space-y-0">
+        <div className="flex items-center justify-center">
+          <input
+            id="hand_first"
+            name="hand"
+            type="radio"
+            className={clsx(
+              "h-4 w-4 border-gray-300 text-rose-600 focus:ring-rose-600",
+              state.step === "input" ? "cursor-pointer" : "cursor-not-allowed",
+            )}
+            checked={player === "first"}
+            onChange={(_e) => setPlayer("first")}
+            disabled={state.step === "play"}
+          />
+          <label
+            htmlFor="hand_first"
+            className="ml-2 block text-sm font-medium leading-6 text-gray-900"
           >
-            ABC349 E - Weighted Tic-Tac-Toe
-          </a>
-          {state.step === "input" ? (
-            <>
-              <GridInput
-                grid={state.grid}
-                setGrid={(newGrid) => setState({ ...state, grid: newGrid })}
-              />
-            </>
-          ) : (
-            <>
-              <GridButton
-                player={player}
-                grid={state.grid}
-                setGrid={(newGrid) => setState({ ...state, grid: newGrid })}
-              />
-            </>
-          )}
-          <div className="grid place-items-center mt-2">
-            <p className="text-sm text-gray-500">
-              {A_MIN} ≦ A<sub>i,j</sub> ≦ {A_MAX}
-            </p>
-          </div>
-          <div className="grid place-items-center mt-4">
-            <label className="text-base font-semibold text-gray-900">
-              Your Hand
-            </label>
-          </div>
-          <div className="mt-2 space-y-2 sm:flex sm:items-center sm:justify-center sm:space-x-10 sm:space-y-0">
-            <div className="flex items-center justify-center">
-              <input
-                id="hand_first"
-                name="hand"
-                type="radio"
-                className={clsx(
-                  "h-4 w-4 border-gray-300 text-rose-600 focus:ring-rose-600",
-                  state.step === "input"
-                    ? "cursor-pointer"
-                    : "cursor-not-allowed",
-                )}
-                checked={player === "first"}
-                onChange={(_e) => setPlayer("first")}
-                disabled={state.step === "play"}
-              />
-              <label
-                htmlFor="hand_first"
-                className="ml-2 block text-sm font-medium leading-6 text-gray-900"
-              >
-                First
-              </label>
-            </div>
-            <div className="flex items-center justify-center">
-              <input
-                id="hand_second"
-                name="hand"
-                type="radio"
-                className={clsx(
-                  "h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600",
-                  state.step === "input"
-                    ? "cursor-pointer"
-                    : "cursor-not-allowed",
-                )}
-                checked={player === "second"}
-                onChange={(_e) => setPlayer("second")}
-                disabled={state.step === "play"}
-              />
-              <label
-                htmlFor="hand_second"
-                className="ml-2 block text-sm font-medium leading-6 text-gray-900"
-              >
-                Second
-              </label>
-            </div>
-          </div>
-          <div className="grid place-items-center mt-4">
-            <button
-              type="button"
-              className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-300"
-              onClick={handleStartButtonClick}
-              disabled={
-                state.step === "play" ||
-                state.grid.some((s) => !GridCell.safeParse(s).success)
-              }
-            >
-              Start
-            </button>
-          </div>
-          {state.step === "input" && hint && (
-            <div className="grid place-items-center mt-2">
-              <p className="text-sm text-gray-500">hint: {hint}</p>
-            </div>
-          )}
-          {state.step === "play" && (
-            <>
-              <div className="grid place-items-center mt-12">
-                <span className="text-base font-semibold text-gray-900">
-                  Score
-                </span>
-                <p className="grid grid-cols-2 gap-x-3 mt-2 ml-10 text-gray-900">
-                  <span className="text-right">
-                    You ({player === "first" ? "First" : "Second"})
-                  </span>
-                  <span>{player === "first" ? score.first : score.second}</span>
-                </p>
-                <p className="grid grid-cols-2 gap-x-3 mt-1 ml-10 text-gray-900">
-                  <span className="text-right">
-                    CPU ({player === "first" ? "Second" : "First"})
-                  </span>
-                  <span>{player === "first" ? score.second : score.first}</span>
-                </p>
-              </div>
-              <div className="grid place-items-center mt-4">{gameResult}</div>
-            </>
-          )}
+            First
+          </label>
+        </div>
+        <div className="flex items-center justify-center">
+          <input
+            id="hand_second"
+            name="hand"
+            type="radio"
+            className={clsx(
+              "h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600",
+              state.step === "input" ? "cursor-pointer" : "cursor-not-allowed",
+            )}
+            checked={player === "second"}
+            onChange={(_e) => setPlayer("second")}
+            disabled={state.step === "play"}
+          />
+          <label
+            htmlFor="hand_second"
+            className="ml-2 block text-sm font-medium leading-6 text-gray-900"
+          >
+            Second
+          </label>
         </div>
       </div>
+      <div className="grid place-items-center mt-4">
+        <button
+          type="button"
+          className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-300"
+          onClick={handleStartButtonClick}
+          disabled={
+            state.step === "play" ||
+            state.grid.some((s) => !GridCell.safeParse(s).success)
+          }
+        >
+          Start
+        </button>
+      </div>
+      {state.step === "input" && hint && (
+        <div className="grid place-items-center mt-2">
+          <p className="text-sm text-gray-500">hint: {hint}</p>
+        </div>
+      )}
+      {state.step === "play" && (
+        <>
+          <div className="grid place-items-center mt-12">
+            <span className="text-base font-semibold text-gray-900">Score</span>
+            <p className="grid grid-cols-2 gap-x-3 mt-2 ml-10 text-gray-900">
+              <span className="text-right">
+                You ({player === "first" ? "First" : "Second"})
+              </span>
+              <span>{player === "first" ? score.first : score.second}</span>
+            </p>
+            <p className="grid grid-cols-2 gap-x-3 mt-1 ml-10 text-gray-900">
+              <span className="text-right">
+                CPU ({player === "first" ? "Second" : "First"})
+              </span>
+              <span>{player === "first" ? score.second : score.first}</span>
+            </p>
+          </div>
+          <div className="grid place-items-center mt-4">{gameResult}</div>
+        </>
+      )}
     </StrictMode>
   );
 }
