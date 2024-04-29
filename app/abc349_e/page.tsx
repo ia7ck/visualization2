@@ -92,7 +92,7 @@ export default function ABC349_E() {
         const isCpuTurn =
           rest >= 1 && player === "first" ? rest % 2 === 0 : rest % 2 === 1;
         if (isCpuTurn) {
-          const p = choosePosition(state.grid);
+          const p = choosePosition(player, state.grid);
           const newGrid = structuredClone(state.grid);
           newGrid[p] = {
             ...state.grid[p],
@@ -415,8 +415,25 @@ function string9ToOwner9(grid: String9): Owner9 | null {
   return null;
 }
 
-function choosePosition(grid: Owner9): number {
-  const { index } = solve(structuredClone(grid));
+function choosePosition(player: Player, grid: Owner9): number {
+  const { index, result } = solve(structuredClone(grid));
+
+  if (result === player) {
+    // player win, CPU lose
+    const g = structuredClone(grid);
+    for (const i of index) {
+      if (g[i].player === null) {
+        g[i].player = player;
+        if (judge(g) === player) {
+          // 次に相手に選ばれると負けるマス
+          // これを取らないと試合放棄のように見える
+          return i;
+        }
+        g[i].player = null;
+      }
+    }
+  }
+
   return randomChoice(index);
 }
 
