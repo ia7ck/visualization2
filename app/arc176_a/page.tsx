@@ -128,39 +128,44 @@ export default function ARC176_A() {
         0 ≦ M ≦ {gridSize.success ? gridSize.data : 0}
       </p>
       {gridSize.success && (
-        <div className="grid place-items-center mt-8 mb-8">
-          {range(0, gridSize.data - 1).map((i) => (
-            <div
-              key={i}
-              className="grid grid-flow-col place-items-start border-t last:border-b border-gray-400"
-            >
-              {range(0, gridSize.data - 1).map((j) => (
-                // biome-ignore lint/a11y/useKeyWithClickEvents: ;_;
-                <div
-                  key={j}
-                  className={clsx(
-                    "grid place-items-center h-8 w-8 border-l last:border-r border-gray-400",
-                    {
-                      "bg-indigo-100": filledPositions.some(
-                        (p) => p.i === i && p.j === j,
-                      ),
-                    },
-                    {
-                      "cursor-pointer":
-                        positions.length < gridSize.data ||
-                        positions.some((p) => p.i === i && p.j === j),
-                    },
-                  )}
-                  onClick={(_e) => handleCellClick({ i, j })}
-                >
-                  {positions.some((p) => p.i === i && p.j === j) && (
-                    <FireIcon className="inline-block h-6 w-6" />
-                  )}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
+        <>
+          <p className="mt-4 text-center text-sm text-gray-500">
+            k = {filledPositions.length}
+          </p>
+          <div className="grid place-items-center mt-1 mb-8">
+            {range(0, gridSize.data - 1).map((i) => (
+              <div
+                key={i}
+                className="grid grid-flow-col place-items-start border-t last:border-b border-gray-400"
+              >
+                {range(0, gridSize.data - 1).map((j) => (
+                  // biome-ignore lint/a11y/useKeyWithClickEvents: ;_;
+                  <div
+                    key={j}
+                    className={clsx(
+                      "grid place-items-center h-8 w-8 border-l last:border-r border-gray-400",
+                      {
+                        "bg-indigo-100": filledPositions.some(
+                          (p) => p.i === i && p.j === j,
+                        ),
+                      },
+                      {
+                        "cursor-pointer":
+                          positions.length < gridSize.data ||
+                          positions.some((p) => p.i === i && p.j === j),
+                      },
+                    )}
+                    onClick={(_e) => handleCellClick({ i, j })}
+                  >
+                    {positions.some((p) => p.i === i && p.j === j) && (
+                      <FireIcon className="inline-block h-6 w-6" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </StrictMode>
   );
