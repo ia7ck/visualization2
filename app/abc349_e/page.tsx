@@ -156,9 +156,7 @@ export default function ABC349_E() {
         </p>
       </div>
       <div className="grid place-items-center mt-4">
-        <p className="text-base font-semibold text-gray-900">
-          Your Hand
-        </p>
+        <p className="text-base font-semibold text-gray-900">Your Hand</p>
       </div>
       <div className="mt-2 space-y-2 sm:flex sm:items-center sm:justify-center sm:space-x-10 sm:space-y-0">
         <div className="flex items-center justify-center">
