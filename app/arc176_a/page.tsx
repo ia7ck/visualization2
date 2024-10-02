@@ -1,5 +1,7 @@
 "use client";
 
+import TextInput, { Hint, Input, Label } from "@/components/TextInput";
+import { VSpace } from "@/components/VSpace";
 import { FireIcon } from "@heroicons/react/16/solid";
 import clsx from "clsx";
 import { StrictMode, useState } from "react";
@@ -76,57 +78,40 @@ export default function ARC176_A() {
       >
         ARC176 A - 01 Matrix Again
       </a>
-      <label
-        htmlFor="grid_size"
-        className="block mt-5 text-sm font-medium leading-6 text-gray-900"
-      >
-        Grid size <var>N</var>
-      </label>
-      <input
-        name="grid_size"
-        id="grid_size"
-        type="number"
-        min={N_MIN}
-        max={N_MAX}
-        inputMode="numeric"
-        className={clsx(
-          "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-          {
-            "text-red-900 ring-red-300 focus:ring-red-500": !gridSize.success,
-          },
-        )}
-        value={gridSizeText}
-        onChange={(e) => handleInputChange(e)}
-      />
-      <p
-        className={clsx("mt-2 text-sm text-gray-500", {
-          "text-red-600": !gridSize.success,
-        })}
-      >
-        {N_MIN} ≦ N ≦ {N_MAX}
-      </p>
-      <label
-        htmlFor="n_fire"
-        className="block mt-2 text-sm font-medium leading-6 text-gray-900"
-      >
-        Number of fire <var>M</var>
-      </label>
-      <input
-        name="n_fire"
-        id="n_fire"
-        type="number"
-        className="block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:ring-gray-200 sm:text-sm sm:leading-6"
-        value={positions.length}
-        readOnly={true}
-        disabled={true}
-      />
-      <p
-        className={clsx("mt-2 text-sm text-gray-500", {
-          invisible: !gridSize.success,
-        })}
-      >
-        0 ≦ M ≦ {gridSize.success ? gridSize.data : 0}
-      </p>
+      <VSpace size="M" />
+      <TextInput invalid={!gridSize.success}>
+        <Label>
+          Grid size <var>N</var>
+        </Label>
+        <Input
+          type="number"
+          inputMode="numeric"
+          min={N_MIN}
+          max={N_MAX}
+          value={gridSizeText}
+          onChange={handleInputChange}
+        />
+        <Hint>
+          {N_MIN} ≦ N ≦ {N_MAX}
+        </Hint>
+      </TextInput>
+      <VSpace size="M" />
+      <TextInput invalid={!gridSize.success}>
+        <Label>
+          Number of fire <var>M</var>
+        </Label>
+        <Input
+          type="number"
+          inputMode="numeric"
+          min={N_MIN}
+          max={N_MAX}
+          value={positions.length}
+          readOnly={true}
+          disabled={true}
+          onChange={handleInputChange}
+        />
+        <Hint>0 ≦ M {gridSize.success && `≦ ${gridSize.data}`}</Hint>
+      </TextInput>
       {gridSize.success && (
         <>
           <p className="mt-4 text-center text-sm text-gray-500">

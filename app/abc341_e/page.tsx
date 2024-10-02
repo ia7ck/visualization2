@@ -1,5 +1,7 @@
 "use client";
 
+import TextInput, { Hint, Input, Label } from "@/components/TextInput";
+import { VSpace } from "@/components/VSpace";
 import * as Slider from "@radix-ui/react-slider";
 import clsx from "clsx";
 import { StrictMode, useState } from "react";
@@ -54,23 +56,21 @@ export default function ABC341_E() {
       >
         ABC341 E - Alternating String
       </a>
-      <label
-        htmlFor="problem_input_string"
-        className="block mt-5 text-sm font-medium leading-6 text-gray-900"
-      >
-        Problem input <var>S</var>
-      </label>
-      <input
-        name="problem_input_string"
-        id="problem_input_string"
-        inputMode="numeric"
-        className="block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        value={text.join("")}
-        onChange={handleTextChange}
-      />
-      <p className="mt-2 text-sm text-gray-500">
-        S<sub>i</sub> ∈ &#123;0, 1&#125;, S.length ≦ {S_LENGTH_LIMIT}
-      </p>
+      <VSpace size="M" />
+      <TextInput>
+        <Label>
+          Problem input <var>S</var>
+        </Label>
+        <Input
+          type="number"
+          inputMode="numeric"
+          value={text.join("")}
+          onChange={handleTextChange}
+        />
+        <Hint>
+          S<sub>i</sub> ∈ &#123;0, 1&#125;, S.length ≦ {S_LENGTH_LIMIT}
+        </Hint>
+      </TextInput>
       <div className="relative mt-2 flex items-start">
         <div className="flex h-6 items-center">
           <input

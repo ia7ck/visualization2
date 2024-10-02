@@ -1,5 +1,7 @@
 "use client";
 
+import TextInput, { Hint, Input, Label } from "@/components/TextInput";
+import { VSpace } from "@/components/VSpace";
 import clsx from "clsx";
 import { StrictMode, useState } from "react";
 import { z } from "zod";
@@ -33,37 +35,24 @@ export default function ABC357_C() {
         ABC357 C - Sierpinski carpet
       </a>
 
-      <label
-        htmlFor="carpet_level"
-        className="block mt-5 text-sm font-medium leading-6 text-gray-900"
-      >
-        Carpet level <var>N</var>
-      </label>
-      <input
-        name="carpet_level"
-        id="carpet_level"
-        type="number"
-        min={N_MIN}
-        max={N_MAX}
-        inputMode="numeric"
-        className={clsx(
-          "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-          {
-            "text-red-900 ring-red-300 focus:ring-red-500":
-              !carpetLevel.success,
-          },
-        )}
-        value={carpetLevelText}
-        onChange={(e) => handleInputChange(e)}
-      />
+      <VSpace size="M" />
 
-      <p
-        className={clsx("mt-2 text-sm text-gray-500", {
-          "text-red-600": !carpetLevel.success,
-        })}
-      >
-        {N_MIN} ≦ N ≦ {N_MAX}
-      </p>
+      <TextInput invalid={!carpetLevel.success}>
+        <Label>
+          Carpet level <var>N</var>
+        </Label>
+        <Input
+          type="number"
+          inputMode="numeric"
+          min={N_MIN}
+          max={N_MAX}
+          value={carpetLevelText}
+          onChange={handleInputChange}
+        />
+        <Hint>
+          {N_MIN} ≦ N ≦ {N_MAX}
+        </Hint>
+      </TextInput>
 
       {carpetLevel.success && (
         <div className="grid place-items-center mt-4 mb-8">

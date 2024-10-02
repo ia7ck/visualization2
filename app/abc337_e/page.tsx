@@ -1,5 +1,7 @@
 "use client";
 
+import TextInput, { Hint, Input, Label } from "@/components/TextInput";
+import { VSpace } from "@/components/VSpace";
 import { CheckCircleIcon as CheckCircleIcon20Solid } from "@heroicons/react/20/solid";
 import {
   CheckCircleIcon as CheckCircleIconOutline,
@@ -39,62 +41,36 @@ export default function ABC337_E() {
       >
         ABC337 E - Bad Juice
       </a>
-      <label
-        htmlFor="n_bottle"
-        className="block mt-5 text-sm font-medium leading-6 text-gray-900"
-      >
-        Number of bottles <var>N</var>
-      </label>
-      <input
-        name="n_bottle"
-        id="n_bottle"
-        type="number"
-        min={BOTTLE_MIN}
-        max={BOTTLE_MAX}
-        inputMode="numeric"
-        className={clsx(
-          "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-          !bottle.success && "text-red-900 ring-red-300 focus:ring-red-500", // overwrite
-        )}
-        value={bottleText}
-        onChange={(e) => setBottleText(e.target.value)}
-      />
-      <p
-        className={clsx(
-          "mt-2 text-sm text-gray-500",
-          !bottle.success && "text-red-600",
-        )}
-      >
-        {BOTTLE_MIN} ≦ N ≦ {BOTTLE_MAX}
-      </p>
-      <label
-        htmlFor="spoiled"
-        className="block mt-2 text-sm font-medium leading-6 text-gray-900"
-      >
-        Spoiled bottle <var>X</var>
-      </label>
-      <input
-        name="spoiled"
-        id="spoiled"
-        type="number"
-        min={1}
-        max={bottle.success ? bottle.data : undefined}
-        inputMode="numeric"
-        className={clsx(
-          "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-          !spoiled.success && "text-red-900 ring-red-300 focus:ring-red-500", // overwrite
-        )}
-        value={spoiledText}
-        onChange={(e) => setSpoiledText(e.target.value)}
-      />
-      <p
-        className={clsx(
-          "mt-2 text-sm text-gray-500",
-          !spoiled.success && "text-red-600",
-        )}
-      >
-        1 ≦ X ≦ N
-      </p>
+      <VSpace size="M" />
+      <TextInput invalid={!bottle.success}>
+        <Label>
+          Number of bottles <var>N</var>
+        </Label>
+        <Input
+          type="number"
+          inputMode="numeric"
+          min={BOTTLE_MIN}
+          max={BOTTLE_MAX}
+          value={bottleText}
+          onChange={(e) => setBottleText(e.target.value)}
+        />
+        <Hint>{`${BOTTLE_MIN} ≦ N ≦ ${BOTTLE_MAX}`}</Hint>
+      </TextInput>
+      <VSpace size="S" />
+      <TextInput invalid={!spoiled.success}>
+        <Label>
+          Spoiled bottle <var>X</var>
+        </Label>
+        <Input
+          type="number"
+          inputMode="numeric"
+          min={1}
+          max={bottle.success ? bottle.data : undefined}
+          value={spoiledText}
+          onChange={(e) => setSpoiledText(e.target.value)}
+        />
+        <Hint>1 ≦ X ≦ N</Hint>
+      </TextInput>
       <p className="mt-2">
         <CheckCircleIcon20Solid className="inline-block h-5 w-5 text-gray-800" />
         <CheckCircleIcon20Solid className="inline-block h-5 w-5 text-indigo-600" />
