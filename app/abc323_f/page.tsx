@@ -1,5 +1,6 @@
 "use client";
 
+import TextInput, { Input, Label } from "@/components/TextInput";
 import { CubeIcon, FlagIcon, UserIcon } from "@heroicons/react/16/solid";
 import { ArrowUturnLeftIcon } from "@heroicons/react/16/solid";
 import clsx from "clsx";
@@ -237,178 +238,152 @@ export default function ABC323_F() {
         <br />
         (X<sub>B</sub>, Y<sub>B</sub>) ≠ (X<sub>C</sub>, Y<sub>C</sub>)
       </p>
-      <label
-        htmlFor="player_x"
-        className="block mt-2 text-sm font-medium leading-6 text-gray-900"
-      >
-        Takahashi&nbsp;
-        <var>
-          X<sub>A</sub>
-        </var>
-      </label>
-      <input
-        name="player_x"
-        id="player_x"
-        type="number"
-        min={X_MIN}
-        max={X_MAX}
-        inputMode="numeric"
-        className={clsx(
-          "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-          !startPositions.success &&
-            startPositions.error.issues.some(
+
+      {/* positions */}
+      <div className="mt-5 mb-10 flex flex-col gap-y-5">
+        <TextInput
+          invalid={
+            !!startPositions.error?.issues.some(
               (issue) =>
                 (issue.path.includes("player") && issue.path.includes("x")) ||
                 (issue.path.includes("player") && issue.path.includes("cargo")),
-            ) &&
-            "text-red-900 ring-red-300 focus:ring-red-500",
-        )}
-        value={playerXText}
-        onChange={(e) => setPlayerXText(e.target.value)}
-      />
-      <label
-        htmlFor="player_y"
-        className="block mt-5 text-sm font-medium leading-6 text-gray-900"
-      >
-        Takahashi&nbsp;
-        <var>
-          Y<sub>A</sub>
-        </var>
-      </label>
-      <input
-        name="player_y"
-        id="player_y"
-        type="number"
-        min={Y_MIN}
-        max={Y_MAX}
-        inputMode="numeric"
-        className={clsx(
-          "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-          !startPositions.success &&
-            startPositions.error.issues.some(
+            )
+          }
+        >
+          <Label>
+            Takahashi&nbsp;
+            <var>
+              X<sub>A</sub>
+            </var>
+          </Label>
+          <Input
+            type="number"
+            inputMode="numeric"
+            min={X_MIN}
+            max={X_MAX}
+            value={playerXText}
+            onChange={(e) => setPlayerXText(e.target.value)}
+          />
+        </TextInput>
+        <TextInput
+          invalid={
+            !!startPositions.error?.issues.some(
               (issue) =>
                 (issue.path.includes("player") && issue.path.includes("y")) ||
                 (issue.path.includes("player") && issue.path.includes("cargo")),
-            ) &&
-            "text-red-900 ring-red-300 focus:ring-red-500",
-        )}
-        value={playerYText}
-        onChange={(e) => setPlayerYText(e.target.value)}
-      />
-      <label
-        htmlFor="cargo_x"
-        className="block mt-5 text-sm font-medium leading-6 text-gray-900"
-      >
-        Cargo&nbsp;
-        <var>
-          X<sub>B</sub>
-        </var>
-      </label>
-      <input
-        name="cargo_x"
-        id="cargo_x"
-        type="number"
-        min={X_MIN}
-        max={X_MAX}
-        inputMode="numeric"
-        className={clsx(
-          "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-          !startPositions.success &&
-            startPositions.error.issues.some(
+            )
+          }
+        >
+          <Label>
+            Takahashi&nbsp;
+            <var>
+              Y<sub>A</sub>
+            </var>
+          </Label>
+          <Input
+            type="number"
+            inputMode="numeric"
+            min={Y_MIN}
+            max={Y_MAX}
+            value={playerYText}
+            onChange={(e) => setPlayerYText(e.target.value)}
+          />
+        </TextInput>
+        <TextInput
+          invalid={
+            !!startPositions.error?.issues.some(
               (issue) =>
                 issue.path.includes("cargo") && issue.path.includes("x"),
-            ) &&
-            "text-red-900 ring-red-300 focus:ring-red-500",
-        )}
-        value={cargoXText}
-        onChange={(e) => setCargoXText(e.target.value)}
-      />
-      <label
-        htmlFor="cargo_y"
-        className="block mt-5 text-sm font-medium leading-6 text-gray-900"
-      >
-        Cargo&nbsp;
-        <var>
-          Y<sub>B</sub>
-        </var>
-      </label>
-      <input
-        name="cargo_y"
-        id="cargo_y"
-        type="number"
-        min={X_MIN}
-        max={X_MAX}
-        inputMode="numeric"
-        className={clsx(
-          "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-          !startPositions.success &&
-            startPositions.error.issues.some(
+            )
+          }
+        >
+          <Label>
+            Cargo&nbsp;
+            <var>
+              X<sub>B</sub>
+            </var>
+          </Label>
+          <Input
+            type="number"
+            inputMode="numeric"
+            min={X_MIN}
+            max={X_MAX}
+            value={cargoXText}
+            onChange={(e) => setCargoXText(e.target.value)}
+          />
+        </TextInput>
+        <TextInput
+          invalid={
+            !!startPositions.error?.issues.some(
               (issue) =>
                 issue.path.includes("cargo") && issue.path.includes("y"),
-            ) &&
-            "text-red-900 ring-red-300 focus:ring-red-500",
-        )}
-        value={cargoYText}
-        onChange={(e) => setCargoYText(e.target.value)}
-      />
-      <label
-        htmlFor="goal_x"
-        className="block mt-5 text-sm font-medium leading-6 text-gray-900"
-      >
-        Goal&nbsp;
-        <var>
-          X<sub>C</sub>
-        </var>
-      </label>
-      <input
-        name="goal_x"
-        id="goal_x"
-        type="number"
-        min={X_MIN}
-        max={X_MAX}
-        inputMode="numeric"
-        className={clsx(
-          "block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-          !startPositions.success &&
-            startPositions.error.issues.some(
+            )
+          }
+        >
+          <Label>
+            Cargo&nbsp;
+            <var>
+              Y<sub>B</sub>
+            </var>
+          </Label>
+          <Input
+            type="number"
+            inputMode="numeric"
+            min={Y_MIN}
+            max={Y_MAX}
+            value={cargoYText}
+            onChange={(e) => setCargoYText(e.target.value)}
+          />
+        </TextInput>
+        <TextInput
+          invalid={
+            !!startPositions.error?.issues.some(
               (issue) =>
                 (issue.path.includes("goal") && issue.path.includes("x")) ||
                 (issue.path.includes("goal") && issue.path.includes("cargo")),
-            ) &&
-            "text-red-900 ring-red-300 focus:ring-red-500",
-        )}
-        value={goalXText}
-        onChange={(e) => setGoalXText(e.target.value)}
-      />
-      <label
-        htmlFor="goal_y"
-        className="block mt-5 text-sm font-medium leading-6 text-gray-900"
-      >
-        Goal&nbsp;
-        <var>
-          Y<sub>C</sub>
-        </var>
-      </label>
-      <input
-        name="goal_y"
-        id="goal_y"
-        type="number"
-        min={X_MIN}
-        max={X_MAX}
-        inputMode="numeric"
-        className={clsx(
-          "block w-full rounded-md border-0 mt-2 mb-6 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-          !startPositions.success &&
-            startPositions.error.issues.some(
+            )
+          }
+        >
+          <Label>
+            Goal&nbsp;
+            <var>
+              X<sub>C</sub>
+            </var>
+          </Label>
+          <Input
+            type="number"
+            inputMode="numeric"
+            min={X_MIN}
+            max={X_MAX}
+            value={goalXText}
+            onChange={(e) => setGoalXText(e.target.value)}
+          />
+        </TextInput>
+        <TextInput
+          invalid={
+            !!startPositions.error?.issues.some(
               (issue) =>
                 (issue.path.includes("goal") && issue.path.includes("y")) ||
                 (issue.path.includes("goal") && issue.path.includes("cargo")),
-            ) &&
-            "text-red-900 ring-red-300 focus:ring-red-500",
-        )}
-        value={goalYText}
-        onChange={(e) => setGoalYText(e.target.value)}
-      />
+            )
+          }
+        >
+          <Label>
+            Goal&nbsp;
+            <var>
+              Y<sub>C</sub>
+            </var>
+          </Label>
+          <Input
+            type="number"
+            inputMode="numeric"
+            min={Y_MIN}
+            max={Y_MAX}
+            value={goalYText}
+            onChange={(e) => setGoalYText(e.target.value)}
+          />
+        </TextInput>
+      </div>
     </StrictMode>
   );
 }
