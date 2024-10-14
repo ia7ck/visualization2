@@ -2,19 +2,21 @@ import { z } from "zod";
 
 type Graph = {
   n: number;
-  edges: { from: number; to: number }[];
+  edges: { from: number; to: number; weight?: number }[];
 };
 
 type ParseOption = {
   indexStart?: "0-indexed" | "1-indexed";
+  weighted?: boolean;
 };
 
-const NonNegativeInt = z.coerce.number().int().nonnegative();
-const PositiveInt = z.coerce.number().int().positive();
+const Int = z.coerce.number().int();
+const NonNegativeInt = Int.nonnegative();
+const PositiveInt = Int.positive();
 
 export function parseGraph(
   input: string,
-  option: ParseOption = { indexStart: "1-indexed" },
+  option: ParseOption = { indexStart: "1-indexed", weighted: false },
 ): Graph | null {
   const lines = input.trimEnd().split("\n");
 
@@ -42,12 +44,20 @@ export function parseGraph(
     i < (m === undefined ? lines.length : Math.min(lines.length, m.data + 1));
     i++
   ) {
-    const [from, to] = lines[i].trim().split(" ");
+    const [from, to, weight] = lines[i].trim().split(" ");
     const e = Edge.safeParse({ from, to });
     if (e.error) {
       return null;
     }
-    edges.push(e.data);
+    if (option.weighted) {
+      const w = Int.safeParse(weight);
+      if (w.error) {
+        return null;
+      }
+      edges.push({ ...e.data, weight: w.data });
+    } else {
+      edges.push(e.data);
+    }
   }
 
   if (m !== undefined && edges.length < m.data) {

@@ -123,6 +123,32 @@ describe("valid", () => {
         });
       });
     });
+    describe("weighted edge", () => {
+      test("w=100", () => {
+        expect(
+          parseGraph(
+            `3
+1 2 100`,
+            { weighted: true },
+          ),
+        ).toStrictEqual({
+          n: 3,
+          edges: [{ from: 1, to: 2, weight: 100 }],
+        });
+      });
+      test("wの後ろは無視", () => {
+        expect(
+          parseGraph(
+            `3
+1 2 100 xxx`,
+            { weighted: true },
+          ),
+        ).toStrictEqual({
+          n: 3,
+          edges: [{ from: 1, to: 2, weight: 100 }],
+        });
+      });
+    });
   });
 });
 
@@ -162,7 +188,19 @@ describe("invalid", () => {
       input: `4 2
 1 2`,
     },
-  ])("$name", ({ input }) => {
-    expect(parseGraph(input)).toBe(null);
+    {
+      name: "weight 文字列",
+      input: `3
+1 2 AAA`,
+      option: { weighted: true },
+    },
+    {
+      name: "weightが無い",
+      input: `3
+1 2`,
+      option: { weighted: true },
+    },
+  ])("$name", ({ input, option }) => {
+    expect(parseGraph(input, option)).toBe(null);
   });
 });
