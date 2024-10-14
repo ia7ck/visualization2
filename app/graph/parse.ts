@@ -5,10 +5,17 @@ type Graph = {
   edges: { from: number; to: number }[];
 };
 
+type ParseOption = {
+  indexStart?: "0-indexed" | "1-indexed";
+};
+
 const NonNegativeInt = z.coerce.number().int().nonnegative();
 const PositiveInt = z.coerce.number().int().positive();
 
-export function parseGraph(input: string): Graph | null {
+export function parseGraph(
+  input: string,
+  option: ParseOption = { indexStart: "1-indexed" },
+): Graph | null {
   const lines = input.trimEnd().split("\n");
 
   const n_m = lines[0].trim().split(/ +/);
@@ -21,7 +28,10 @@ export function parseGraph(input: string): Graph | null {
     return null;
   }
 
-  const NodeIndex = PositiveInt.max(n.data);
+  const NodeIndex =
+    option.indexStart === "0-indexed"
+      ? NonNegativeInt.max(n.data - 1)
+      : PositiveInt.max(n.data);
   const Edge = z.object({
     from: NodeIndex,
     to: NodeIndex,

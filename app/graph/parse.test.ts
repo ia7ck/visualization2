@@ -108,6 +108,22 @@ describe("valid", () => {
       expect(parseGraph(input)).toStrictEqual(expected);
     });
   });
+  describe("parse option", () => {
+    describe("0-indexed", () => {
+      test("0, N-1", () => {
+        expect(
+          parseGraph(
+            `3
+0 2`,
+            { indexStart: "0-indexed" },
+          ),
+        ).toStrictEqual({
+          n: 3,
+          edges: [{ from: 0, to: 2 }],
+        });
+      });
+    });
+  });
 });
 
 describe("invalid", () => {
