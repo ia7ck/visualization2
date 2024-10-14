@@ -5,13 +5,19 @@ type Graph = {
   edges: { from: number; to: number }[];
 };
 
+const NonNegativeInt = z.coerce.number().int().nonnegative();
 const PositiveInt = z.coerce.number().int().positive();
 
 export function parseGraph(input: string): Graph | null {
   const lines = input.trimEnd().split("\n");
 
-  const n = PositiveInt.safeParse(lines[0].trim());
+  const n_m = lines[0].trim().split(/ +/);
+  const n = PositiveInt.safeParse(n_m[0]);
   if (n.error) {
+    return null;
+  }
+  const m = n_m.length < 2 ? undefined : NonNegativeInt.safeParse(n_m[1]);
+  if (m?.error) {
     return null;
   }
 
@@ -21,13 +27,21 @@ export function parseGraph(input: string): Graph | null {
     to: NodeIndex,
   });
   const edges: Graph["edges"] = [];
-  for (let i = 1; i < lines.length; i++) {
+  for (
+    let i = 1;
+    i < (m === undefined ? lines.length : Math.min(lines.length, m.data + 1));
+    i++
+  ) {
     const [from, to] = lines[i].trim().split(" ");
     const e = Edge.safeParse({ from, to });
     if (e.error) {
       return null;
     }
     edges.push(e.data);
+  }
+
+  if (m !== undefined && edges.length < m.data) {
+    return null;
   }
 
   return { n: n.data, edges };
