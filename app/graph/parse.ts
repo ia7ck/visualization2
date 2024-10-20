@@ -17,17 +17,32 @@ const PositiveInt = Int.positive();
 export function parseGraph(
   input: string,
   option: ParseOption = { indexStart: "1-indexed", weighted: false },
-): Graph | null {
+):
+  | { ok: true; data: Graph }
+  | { ok: false; error: { field: "N" | "M" | "edge"; message: string } } {
   const lines = input.trimEnd().split("\n");
 
   const n_m = lines[0].trim().split(/ +/);
   const n = PositiveInt.safeParse(n_m[0]);
   if (n.error) {
-    return null;
+    return {
+      ok: false,
+      error: {
+        field: "N",
+        message: `Invalid node number: "${n_m[0]}". It must be a positive integer.`,
+      },
+    };
   }
+
   const m = n_m.length < 2 ? undefined : NonNegativeInt.safeParse(n_m[1]);
   if (m?.error) {
-    return null;
+    return {
+      ok: false,
+      error: {
+        field: "M",
+        message: `Invalid edge number: "${n_m[1]}". It must be a non-negative integer.`,
+      },
+    };
   }
 
   const NodeIndex =
@@ -47,12 +62,24 @@ export function parseGraph(
     const [from, to, weight] = lines[i].trim().split(" ");
     const e = Edge.safeParse({ from, to });
     if (e.error) {
-      return null;
+      return {
+        ok: false,
+        error: {
+          field: "edge",
+          message: `Invalid edge: "${lines[i].trim()}". It must be space-separated integers.`,
+        },
+      };
     }
     if (option.weighted) {
       const w = Int.safeParse(weight);
       if (w.error) {
-        return null;
+        return {
+          ok: false,
+          error: {
+            field: "edge",
+            message: `Invalid edge weight: "${weight ?? ""}". It must be an integer.`,
+          },
+        };
       }
       edges.push({ ...e.data, weight: w.data });
     } else {
@@ -61,8 +88,14 @@ export function parseGraph(
   }
 
   if (m !== undefined && edges.length < m.data) {
-    return null;
+    return {
+      ok: false,
+      error: {
+        field: "edge",
+        message: `Too few edges. Expected ${m.data}, but got ${edges.length}.`,
+      },
+    };
   }
 
-  return { n: n.data, edges };
+  return { ok: true, data: { n: n.data, edges } };
 }

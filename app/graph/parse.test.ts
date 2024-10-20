@@ -29,7 +29,7 @@ describe("valid", () => {
         },
       },
     ])("$name", ({ input, expected }) => {
-      expect(parseGraph(input)).toStrictEqual(expected);
+      expect(parseGraph(input)).toStrictEqual({ ok: true, data: expected });
     });
   });
   describe("N=2", () => {
@@ -59,7 +59,7 @@ describe("valid", () => {
         },
       },
     ])("$name", ({ input, expected }) => {
-      expect(parseGraph(input)).toStrictEqual(expected);
+      expect(parseGraph(input)).toStrictEqual({ ok: true, data: expected });
     });
   });
   describe("辺数Mを指定", () => {
@@ -105,7 +105,7 @@ describe("valid", () => {
         },
       },
     ])("$name", ({ input, expected }) => {
-      expect(parseGraph(input)).toStrictEqual(expected);
+      expect(parseGraph(input)).toStrictEqual({ ok: true, data: expected });
     });
   });
   describe("parse option", () => {
@@ -118,8 +118,11 @@ describe("valid", () => {
             { indexStart: "0-indexed" },
           ),
         ).toStrictEqual({
-          n: 3,
-          edges: [{ from: 0, to: 2 }],
+          ok: true,
+          data: {
+            n: 3,
+            edges: [{ from: 0, to: 2 }],
+          },
         });
       });
     });
@@ -132,8 +135,11 @@ describe("valid", () => {
             { weighted: true },
           ),
         ).toStrictEqual({
-          n: 3,
-          edges: [{ from: 1, to: 2, weight: 100 }],
+          ok: true,
+          data: {
+            n: 3,
+            edges: [{ from: 1, to: 2, weight: 100 }],
+          },
         });
       });
       test("wの後ろは無視", () => {
@@ -144,8 +150,11 @@ describe("valid", () => {
             { weighted: true },
           ),
         ).toStrictEqual({
-          n: 3,
-          edges: [{ from: 1, to: 2, weight: 100 }],
+          ok: true,
+          data: {
+            n: 3,
+            edges: [{ from: 1, to: 2, weight: 100 }],
+          },
         });
       });
     });
@@ -201,6 +210,6 @@ describe("invalid", () => {
       option: { weighted: true },
     },
   ])("$name", ({ input, option }) => {
-    expect(parseGraph(input, option)).toBe(null);
+    expect(parseGraph(input, option)).toHaveProperty("ok", false);
   });
 });
