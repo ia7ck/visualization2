@@ -1,5 +1,6 @@
 "use client";
 
+import { Field, Label, Switch } from "@headlessui/react";
 import clsx from "clsx";
 import { useRef, useState } from "react";
 
@@ -19,6 +20,7 @@ export default function Graph() {
   const [graphText, setGraphText] = useState("3\n1 2");
   const [layout, setLayout] = useState<Layout>("random");
   const [indexing, setIndexing] = useState<Indexing>("1-indexed");
+  const [directed, setDirected] = useState(true);
   const [elements, setElements] = useState<cytoscape.ElementDefinition[]>([
     { data: { id: "1" }, renderedPosition: { x: 50, y: 50 } },
     { data: { id: "2" }, renderedPosition: { x: 100, y: 150 } },
@@ -152,6 +154,28 @@ export default function Graph() {
           ))}
         </div>
       </fieldset>
+      <VSpace size="M" />
+      <fieldset>
+        <legend className="text-sm font-semibold leading-6 text-gray-900">
+          Edge Type
+        </legend>
+        <VSpace size="S" />
+        <Field className="flex items-center">
+          <Label as="span" className="mr-3 text-sm">
+            <span className="font-medium text-gray-900">directed</span>
+          </Label>
+          <Switch
+            checked={directed}
+            onChange={setDirected}
+            className="group relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 data-[checked]:bg-indigo-600"
+          >
+            <span
+              aria-hidden="true"
+              className="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out group-data-[checked]:translate-x-5"
+            />
+          </Switch>
+        </Field>
+      </fieldset>
       <VSpace size="L" />
       <CytoscapeComponent
         className="border"
@@ -168,6 +192,13 @@ export default function Graph() {
               color: "white",
               "text-halign": "center",
               "text-valign": "center",
+            },
+          },
+          {
+            selector: "edge",
+            style: {
+              "curve-style": "bezier",
+              "target-arrow-shape": directed ? "triangle" : "none",
             },
           },
         ]}
