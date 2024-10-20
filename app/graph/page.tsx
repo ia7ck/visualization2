@@ -15,6 +15,15 @@ export default function Graph() {
   const indexings = ["0-indexed", "1-indexed"] as const;
   type Indexing = (typeof indexings)[number];
 
+  type Graph = {
+    n: number;
+    edges: { from: number; to: number }[];
+  };
+  type Params = {
+    text: string;
+    option: { indexing: Indexing };
+  };
+
   type Element =
     | {
         group: "nodes";
@@ -28,29 +37,17 @@ export default function Graph() {
   const [layout, setLayout] = useState<Layout>("random");
   const [indexing, setIndexing] = useState<Indexing>("1-indexed");
   const [directed, setDirected] = useState(true);
-  const [elements, setElements] = useState<Element[]>([
-    {
-      group: "nodes",
-      data: { id: "n1", label: "1" },
-      renderedPosition: { x: 50, y: 50 },
-    },
-    {
-      group: "nodes",
-      data: { id: "n2", label: "2" },
-      renderedPosition: { x: 100, y: 150 },
-    },
-    {
-      group: "nodes",
-      data: { id: "n3", label: "3" },
-      renderedPosition: { x: 200, y: 100 },
-    },
-    { group: "edges", data: { id: "e1", source: "n1", target: "n2" } },
-  ]);
+  // 最後に parse が成功したときのグラフとパラメータ
+  const [graph, setGraph] = useState<{ data: Graph; params: Params }>({
+    data: { n: 3, edges: [{ from: 1, to: 2 }] },
+    params: { text: graphText, option: { indexing } },
+  });
+  const [invalid, setInvalid] = useState(false);
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
-    updateElements(value, { indexing });
     setGraphText(value);
+    updateGraph(value, { indexing });
   };
 
   const handleLayoutChange = (ly: Layout) => {
@@ -60,40 +57,40 @@ export default function Graph() {
 
   const handleIndexingChange = (ind: Indexing) => {
     setIndexing(ind);
-    updateElements(graphText, { indexing: ind });
+    updateGraph(graphText, { indexing: ind });
   };
 
-  const updateElements = (text: string, option: { indexing: Indexing }) => {
-    const graph = parseGraph(text, {
-      indexStart: option.indexing,
-    });
+  const updateGraph = (text: string, option: { indexing: Indexing }) => {
+    const graph = parseGraph(text, { indexStart: option.indexing });
     if (graph.ok) {
-      const newElements: typeof elements = [];
-      const width = cyRef.current?.width() ?? 300;
-      const height = cyRef.current?.height() ?? 400;
-      for (let i = 1; i <= graph.data.n; i++) {
-        const label = option.indexing === "0-indexed" ? `${i - 1}` : `${i}`;
-        newElements.push({
-          group: "nodes",
-          data: { id: `n${label}`, label },
-          renderedPosition: {
-            x: (Math.random() + 0.5) * (width / 2),
-            y: (Math.random() + 0.5) * (height / 2),
-          },
-        });
-      }
-      for (const [i, e] of graph.data.edges.entries()) {
-        newElements.push({
-          group: "edges",
-          data: { id: `e${i}`, source: `n${e.from}`, target: `n${e.to}` },
-        });
-      }
-      setElements(newElements);
+      setGraph({ data: graph.data, params: { text, option } });
+      setInvalid(false);
+    } else {
+      setInvalid(true);
     }
   };
 
-  // invalid を state にしたほうがいい？
-  const invalid = parseGraph(graphText, { indexStart: indexing }).ok === false;
+  const elements: Element[] = [];
+  const width = cyRef.current?.width() ?? 300;
+  const height = cyRef.current?.height() ?? 400;
+  for (let i = 1; i <= graph.data.n; i++) {
+    const label =
+      graph.params.option.indexing === "0-indexed" ? `${i - 1}` : `${i}`;
+    elements.push({
+      group: "nodes",
+      data: { id: `n${label}`, label },
+      renderedPosition: {
+        x: (Math.random() + 0.5) * (width / 2),
+        y: (Math.random() + 0.5) * (height / 2),
+      },
+    });
+  }
+  for (const [i, e] of graph.data.edges.entries()) {
+    elements.push({
+      group: "edges",
+      data: { id: `e${i}`, source: `n${e.from}`, target: `n${e.to}` },
+    });
+  }
 
   return (
     <>
