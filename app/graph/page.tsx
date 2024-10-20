@@ -104,17 +104,11 @@ export default function Graph() {
                 type="radio"
                 checked={ly === layout}
                 onChange={() => handleLayoutChange(ly)}
-                className={clsx(
-                  "h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600",
-                  invalid && "cursor-not-allowed opacity-50",
-                )}
+                className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
               />
               <label
                 htmlFor={ly}
-                className={clsx(
-                  "ml-3 block text-sm font-medium leading-6 text-gray-900",
-                  invalid && "cursor-not-allowed text-opacity-50",
-                )}
+                className="ml-3 block text-sm font-medium leading-6 text-gray-900"
               >
                 {ly}
               </label>
@@ -134,19 +128,12 @@ export default function Graph() {
                 id={ind}
                 type="radio"
                 checked={ind === indexing}
-                disabled={invalid}
                 onChange={() => handleIndexingChange(ind)}
-                className={clsx(
-                  "h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600",
-                  invalid && "cursor-not-allowed opacity-50",
-                )}
+                className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
               />
               <label
                 htmlFor={ind}
-                className={clsx(
-                  "ml-3 block text-sm font-medium leading-6 text-gray-900",
-                  invalid && "cursor-not-allowed text-opacity-50",
-                )}
+                className="ml-3 block text-sm font-medium leading-6 text-gray-900"
               >
                 {ind}
               </label>
