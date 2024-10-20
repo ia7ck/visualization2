@@ -19,7 +19,10 @@ export function parseGraph(
   option: ParseOption = { indexStart: "1-indexed", weighted: false },
 ):
   | { ok: true; data: Graph }
-  | { ok: false; error: { field: "N" | "M" | "edge"; message: string } } {
+  | {
+      ok: false;
+      error: { field: "N" | "M" | "edge"; line: number; message: string };
+    } {
   const lines = input.trimEnd().split("\n");
 
   const n_m = lines[0].trim().split(/ +/);
@@ -29,6 +32,7 @@ export function parseGraph(
       ok: false,
       error: {
         field: "N",
+        line: 0,
         message: `Invalid node number: "${n_m[0]}". It must be a positive integer.`,
       },
     };
@@ -40,6 +44,7 @@ export function parseGraph(
       ok: false,
       error: {
         field: "M",
+        line: 0,
         message: `Invalid edge number: "${n_m[1]}". It must be a non-negative integer.`,
       },
     };
@@ -66,6 +71,7 @@ export function parseGraph(
         ok: false,
         error: {
           field: "edge",
+          line: i,
           message: `Invalid edge: "${lines[i].trim()}". It must be space-separated integers.`,
         },
       };
@@ -77,6 +83,7 @@ export function parseGraph(
           ok: false,
           error: {
             field: "edge",
+            line: i,
             message: `Invalid edge weight: "${weight ?? ""}". It must be an integer.`,
           },
         };
@@ -92,6 +99,7 @@ export function parseGraph(
       ok: false,
       error: {
         field: "edge",
+        line: lines.length,
         message: `Too few edges. Expected ${m.data}, but got ${edges.length}.`,
       },
     };
