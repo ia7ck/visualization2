@@ -23,6 +23,11 @@ export default function Graph() {
     text: string;
     option: { indexing: Indexing };
   };
+  // parse error
+  type Error = {
+    line: number;
+    message: string;
+  };
 
   type Element =
     | {
@@ -42,7 +47,7 @@ export default function Graph() {
     data: { n: 3, edges: [{ from: 1, to: 2 }] },
     params: { text: graphText, option: { indexing } },
   });
-  const [invalid, setInvalid] = useState(false);
+  const [error, setError] = useState<null | Error>(null);
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -64,9 +69,9 @@ export default function Graph() {
     const graph = parseGraph(text, { indexStart: option.indexing });
     if (graph.ok) {
       setGraph({ data: graph.data, params: { text, option } });
-      setInvalid(false);
+      setError(null);
     } else {
-      setInvalid(true);
+      setError(graph.error);
     }
   };
 
@@ -106,12 +111,17 @@ export default function Graph() {
           rows={4}
           className={clsx(
             "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-            invalid && "text-red-900 ring-red-300 focus:ring-red-500",
+            error && "text-red-900 ring-red-300 focus:ring-red-500",
           )}
           value={graphText}
           onChange={handleTextAreaChange}
         />
       </div>
+      {error && (
+        <div className="text-sm text-red-700">
+          line {error.line + 1}: {error.message}
+        </div>
+      )}
       <VSpace size="M" />
       <fieldset>
         <legend className="text-sm font-semibold leading-6 text-gray-900">

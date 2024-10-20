@@ -67,12 +67,14 @@ export function parseGraph(
     const [from, to, weight] = lines[i].trim().split(" ");
     const e = Edge.safeParse({ from, to });
     if (e.error) {
+      const lb = option.indexStart === "0-indexed" ? 0 : 1;
+      const ub = option.indexStart === "0-indexed" ? n.data - 1 : n.data;
       return {
         ok: false,
         error: {
           field: "edge",
           line: i,
-          message: `Invalid edge: "${lines[i].trim()}". It must be space-separated integers.`,
+          message: `Invalid edge: "${lines[i].trim()}". It must be space-separated integers between ${lb} and ${ub}.`,
         },
       };
     }
