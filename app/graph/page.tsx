@@ -4,7 +4,6 @@ import { Field, Label, Switch } from "@headlessui/react";
 import clsx from "clsx";
 import { useRef, useState } from "react";
 
-import type cytoscape from "cytoscape";
 import CytoscapeComponent from "react-cytoscapejs";
 
 import { VSpace } from "@/components/VSpace";
@@ -16,16 +15,36 @@ export default function Graph() {
   const indexings = ["0-indexed", "1-indexed"] as const;
   type Indexing = (typeof indexings)[number];
 
+  type Element =
+    | {
+        group: "nodes";
+        data: { id: string; label: string };
+        renderedPosition: { x: number; y: number };
+      }
+    | { group: "edges"; data: { id: string; source: string; target: string } };
+
   const cyRef = useRef<cytoscape.Core>();
   const [graphText, setGraphText] = useState("3\n1 2");
   const [layout, setLayout] = useState<Layout>("random");
   const [indexing, setIndexing] = useState<Indexing>("1-indexed");
   const [directed, setDirected] = useState(true);
-  const [elements, setElements] = useState<cytoscape.ElementDefinition[]>([
-    { data: { id: "1" }, renderedPosition: { x: 50, y: 50 } },
-    { data: { id: "2" }, renderedPosition: { x: 100, y: 150 } },
-    { data: { id: "3" }, renderedPosition: { x: 200, y: 100 } },
-    { data: { source: "1", target: "2" } },
+  const [elements, setElements] = useState<Element[]>([
+    {
+      group: "nodes",
+      data: { id: "n1", label: "1" },
+      renderedPosition: { x: 50, y: 50 },
+    },
+    {
+      group: "nodes",
+      data: { id: "n2", label: "2" },
+      renderedPosition: { x: 100, y: 150 },
+    },
+    {
+      group: "nodes",
+      data: { id: "n3", label: "3" },
+      renderedPosition: { x: 200, y: 100 },
+    },
+    { group: "edges", data: { id: "e1", source: "n1", target: "n2" } },
   ]);
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -53,16 +72,21 @@ export default function Graph() {
       const width = cyRef.current?.width() ?? 300;
       const height = cyRef.current?.height() ?? 400;
       for (let i = 1; i <= graph.data.n; i++) {
+        const label = option.indexing === "0-indexed" ? `${i - 1}` : `${i}`;
         newElements.push({
-          data: { id: option.indexing === "0-indexed" ? `${i - 1}` : `${i}` },
+          group: "nodes",
+          data: { id: `n${label}`, label },
           renderedPosition: {
             x: (Math.random() + 0.5) * (width / 2),
             y: (Math.random() + 0.5) * (height / 2),
           },
         });
       }
-      for (const e of graph.data.edges) {
-        newElements.push({ data: { source: `${e.from}`, target: `${e.to}` } });
+      for (const [i, e] of graph.data.edges.entries()) {
+        newElements.push({
+          group: "edges",
+          data: { id: `e${i}`, source: `n${e.from}`, target: `n${e.to}` },
+        });
       }
       setElements(newElements);
     }
@@ -175,7 +199,7 @@ export default function Graph() {
           {
             selector: "node",
             style: {
-              label: "data(id)",
+              label: "data(label)",
               color: "white",
               "text-halign": "center",
               "text-valign": "center",
