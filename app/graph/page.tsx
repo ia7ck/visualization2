@@ -14,33 +14,33 @@ import { prufer_decode } from "./prufer";
 const TREE_SIZE_MIN = 1;
 const TreeSize = z.coerce.number().int().min(TREE_SIZE_MIN);
 
+const layouts = ["random", "grid", "circle"] as const;
+type Layout = (typeof layouts)[number];
+const indexings = ["0-indexed", "1-indexed"] as const;
+type Indexing = (typeof indexings)[number];
+
+type Graph = {
+  n: number;
+  edges: { from: number; to: number }[];
+};
+type Params = {
+  option: { indexing: Indexing };
+};
+// parse error
+type Error = {
+  line: number;
+  message: string;
+};
+
+type Element =
+  | {
+      group: "nodes";
+      data: { id: string; label: string };
+      renderedPosition: { x: number; y: number };
+    }
+  | { group: "edges"; data: { id: string; source: string; target: string } };
+
 export default function Graph() {
-  const layouts = ["random", "grid", "circle"] as const;
-  type Layout = (typeof layouts)[number];
-  const indexings = ["0-indexed", "1-indexed"] as const;
-  type Indexing = (typeof indexings)[number];
-
-  type Graph = {
-    n: number;
-    edges: { from: number; to: number }[];
-  };
-  type Params = {
-    option: { indexing: Indexing };
-  };
-  // parse error
-  type Error = {
-    line: number;
-    message: string;
-  };
-
-  type Element =
-    | {
-        group: "nodes";
-        data: { id: string; label: string };
-        renderedPosition: { x: number; y: number };
-      }
-    | { group: "edges"; data: { id: string; source: string; target: string } };
-
   const cyRef = useRef<cytoscape.Core>();
   const [graphText, setGraphText] = useState("3\n1 2");
   const [treeSizeText, setTreeSizeText] = useState("");
