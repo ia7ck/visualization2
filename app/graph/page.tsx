@@ -94,17 +94,18 @@ export default function Graph() {
   };
 
   const updateGraph = (g: string | Graph, option: { indexing: Indexing }) => {
+    let graph: ReturnType<typeof parseGraph>;
     if (typeof g === "string") {
-      const graph = parseGraph(g, { indexStart: option.indexing });
-      if (graph.ok) {
-        setGraph({ data: graph.data, params: { option } });
-        setParseError(null);
-      } else {
-        setParseError(graph.error);
-      }
+      graph = parseGraph(g, { indexStart: option.indexing });
     } else {
-      setGraph({ data: g, params: { option } });
+      graph = { ok: true, data: g };
+    }
+
+    if (graph.ok) {
+      setGraph({ data: graph.data, params: { option } });
       setParseError(null);
+    } else {
+      setParseError(graph.error);
     }
   };
 
