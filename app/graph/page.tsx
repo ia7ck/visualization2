@@ -3,11 +3,16 @@
 import { Field, Label, Switch } from "@headlessui/react";
 import clsx from "clsx";
 import { useRef, useState } from "react";
+import { z } from "zod";
 
 import CytoscapeComponent from "react-cytoscapejs";
 
 import { VSpace } from "@/components/VSpace";
 import { parseGraph } from "./parse";
+import { prufer_decode } from "./prufer";
+
+const TREE_SIZE_MIN = 1;
+const TreeSize = z.coerce.number().int().min(TREE_SIZE_MIN);
 
 export default function Graph() {
   const layouts = ["random", "grid", "circle"] as const;
@@ -20,7 +25,6 @@ export default function Graph() {
     edges: { from: number; to: number }[];
   };
   type Params = {
-    text: string;
     option: { indexing: Indexing };
   };
   // parse error
@@ -39,13 +43,14 @@ export default function Graph() {
 
   const cyRef = useRef<cytoscape.Core>();
   const [graphText, setGraphText] = useState("3\n1 2");
+  const [treeSizeText, setTreeSizeText] = useState("");
   const [layout, setLayout] = useState<Layout>("random");
   const [indexing, setIndexing] = useState<Indexing>("1-indexed");
   const [directed, setDirected] = useState(true);
   // 最後に parse が成功したときのグラフとパラメータ
   const [graph, setGraph] = useState<{ data: Graph; params: Params }>({
     data: { n: 3, edges: [{ from: 1, to: 2 }] },
-    params: { text: graphText, option: { indexing } },
+    params: { option: { indexing } },
   });
   const [error, setError] = useState<null | Error>(null);
 
@@ -53,6 +58,30 @@ export default function Graph() {
     const value = e.target.value;
     setGraphText(value);
     updateGraph(value, { indexing });
+  };
+
+  const handleTreeGenerateClick = () => {
+    const treeSize = TreeSize.safeParse(treeSizeText);
+    if (treeSize.success) {
+      const n = treeSize.data;
+      const code: number[] = [];
+      for (let i = 0; i < n - 2; i++) {
+        code.push(getRandomInt(0, n));
+      }
+      const treeEdges = n === 0 ? [] : prufer_decode(code);
+      const edges = treeEdges.map(([from, to]) => {
+        if (indexing === "1-indexed") {
+          return { from: from + 1, to: to + 1 };
+        }
+        return { from, to };
+      });
+      const text = `${n}\n${edges.map((e) => `${e.from} ${e.to}`).join("\n")}`;
+      setGraphText(text);
+      setDirected(false);
+      updateGraph({ n, edges }, { indexing });
+    } else {
+      // TODO
+    }
   };
 
   const handleLayoutChange = (ly: Layout) => {
@@ -65,13 +94,18 @@ export default function Graph() {
     updateGraph(graphText, { indexing: ind });
   };
 
-  const updateGraph = (text: string, option: { indexing: Indexing }) => {
-    const graph = parseGraph(text, { indexStart: option.indexing });
-    if (graph.ok) {
-      setGraph({ data: graph.data, params: { text, option } });
-      setError(null);
+  const updateGraph = (g: string | Graph, option: { indexing: Indexing }) => {
+    if (typeof g === "string") {
+      const graph = parseGraph(g, { indexStart: option.indexing });
+      if (graph.ok) {
+        setGraph({ data: graph.data, params: { option } });
+        setError(null);
+      } else {
+        setError(graph.error);
+      }
     } else {
-      setError(graph.error);
+      setGraph({ data: g, params: { option } });
+      setError(null);
     }
   };
 
@@ -122,6 +156,30 @@ export default function Graph() {
           line {error.line + 1}: {error.message}
         </div>
       )}
+      <VSpace size="M" />
+      <label
+        htmlFor="tree-size"
+        className="block text-sm font-medium leading-6 text-gray-900"
+      >
+        Tree size
+      </label>
+      <div className="mt-2 flex rounded-md shadow-sm">
+        <input
+          id="tree-size"
+          type="number"
+          inputMode="numeric"
+          value={treeSizeText}
+          onChange={(e) => setTreeSizeText(e.target.value)}
+          className="block w-full rounded-none rounded-l-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        />
+        <button
+          type="button"
+          onClick={handleTreeGenerateClick}
+          className="relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+        >
+          Generate
+        </button>
+      </div>
       <VSpace size="M" />
       <fieldset>
         <legend className="text-sm font-semibold leading-6 text-gray-900">
@@ -224,4 +282,9 @@ export default function Graph() {
       <VSpace size="L" />
     </>
   );
+}
+
+// [min, max)
+function getRandomInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min) + min);
 }
