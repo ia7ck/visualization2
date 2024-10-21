@@ -137,7 +137,7 @@ export default function Graph() {
         htmlFor="graph-text"
         className="block text-sm font-medium leading-6 text-gray-900"
       >
-        Graph Input
+        Graph input
       </label>
       <div className="mt-2">
         <textarea
@@ -233,7 +233,7 @@ export default function Graph() {
       <VSpace size="M" />
       <fieldset>
         <legend className="text-sm font-semibold leading-6 text-gray-900">
-          Edge Type
+          Edge type
         </legend>
         <VSpace size="S" />
         <Field className="flex items-center">
