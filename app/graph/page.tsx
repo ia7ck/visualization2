@@ -23,11 +23,10 @@ type Graph = {
   n: number;
   edges: { from: number; to: number }[];
 };
-type Params = {
+type ParseParams = {
   option: { indexing: Indexing };
 };
-// parse error
-type Error = {
+type ParseError = {
   line: number;
   message: string;
 };
@@ -48,11 +47,11 @@ export default function Graph() {
   const [indexing, setIndexing] = useState<Indexing>("1-indexed");
   const [directed, setDirected] = useState(true);
   // 最後に parse が成功したときのグラフとパラメータ
-  const [graph, setGraph] = useState<{ data: Graph; params: Params }>({
+  const [graph, setGraph] = useState<{ data: Graph; params: ParseParams }>({
     data: { n: 3, edges: [{ from: 1, to: 2 }] },
     params: { option: { indexing } },
   });
-  const [error, setError] = useState<null | Error>(null);
+  const [parseError, setParseError] = useState<null | ParseError>(null);
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -99,13 +98,13 @@ export default function Graph() {
       const graph = parseGraph(g, { indexStart: option.indexing });
       if (graph.ok) {
         setGraph({ data: graph.data, params: { option } });
-        setError(null);
+        setParseError(null);
       } else {
-        setError(graph.error);
+        setParseError(graph.error);
       }
     } else {
       setGraph({ data: g, params: { option } });
-      setError(null);
+      setParseError(null);
     }
   };
 
@@ -145,15 +144,15 @@ export default function Graph() {
           rows={4}
           className={clsx(
             "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
-            error && "text-red-900 ring-red-300 focus:ring-red-500",
+            parseError && "text-red-900 ring-red-300 focus:ring-red-500",
           )}
           value={graphText}
           onChange={handleTextAreaChange}
         />
       </div>
-      {error && (
+      {parseError && (
         <div className="text-sm text-red-700">
-          line {error.line + 1}: {error.message}
+          line {parseError.line + 1}: {parseError.message}
         </div>
       )}
       <VSpace size="M" />
