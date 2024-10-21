@@ -37,7 +37,7 @@ type Element =
       data: { id: string; label: string };
       renderedPosition: { x: number; y: number };
     }
-  | { group: "edges"; data: { id: string; source: string; target: string } };
+  | { group: "edges"; data: { source: string; target: string } };
 
 export default function Graph() {
   const cyRef = useRef<cytoscape.Core>();
@@ -124,10 +124,10 @@ export default function Graph() {
       },
     });
   }
-  for (const [i, e] of graph.data.edges.entries()) {
+  for (const e of graph.data.edges) {
     elements.push({
       group: "edges",
-      data: { id: `e${i}`, source: `n${e.from}`, target: `n${e.to}` },
+      data: { source: `n${e.from}`, target: `n${e.to}` },
     });
   }
 
