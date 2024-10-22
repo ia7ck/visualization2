@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { expect, test } from "vitest";
 import { prufer_decode } from "./prufer";
 
 test.each([
