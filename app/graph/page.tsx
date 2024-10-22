@@ -2,7 +2,7 @@
 
 import { Field, Label, Switch } from "@headlessui/react";
 import clsx from "clsx";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 
 import CytoscapeComponent from "react-cytoscapejs";
@@ -52,6 +52,13 @@ export default function Graph() {
     params: { option: { indexing } },
   });
   const [parseError, setParseError] = useState<null | ParseError>(null);
+  // むー　何かおかしい気がする
+  const [forceReLayout, setForceReLayout] = useState(0);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies(forceReLayout): CytoscapeComponent に elements が入ったあとに layout.run を実行する必要がある
+  useEffect(() => {
+    cyRef.current?.layout({ name: layout }).run();
+  }, [layout, forceReLayout]);
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -85,7 +92,6 @@ export default function Graph() {
 
   const handleLayoutChange = (ly: Layout) => {
     setLayout(ly);
-    cyRef.current?.layout({ name: ly }).run();
   };
 
   const handleIndexingChange = (ind: Indexing) => {
@@ -94,18 +100,26 @@ export default function Graph() {
   };
 
   const updateGraph = (g: string | Graph, option: { indexing: Indexing }) => {
-    let graph: ReturnType<typeof parseGraph>;
+    let newGraph: ReturnType<typeof parseGraph>;
     if (typeof g === "string") {
-      graph = parseGraph(g, { indexStart: option.indexing });
+      newGraph = parseGraph(g, { indexStart: option.indexing });
     } else {
-      graph = { ok: true, data: g };
+      newGraph = { ok: true, data: g };
     }
 
-    if (graph.ok) {
-      setGraph({ data: graph.data, params: { option } });
+    if (newGraph.ok) {
+      setGraph({ data: newGraph.data, params: { option } });
       setParseError(null);
+      // 頂点が増減したときには layout しなおすのがよさそう
+      // indexing が変わると頂点 0 が増えたり消えたりする
+      if (
+        newGraph.data.n !== graph.data.n ||
+        option.indexing !== graph.params.option.indexing
+      ) {
+        setForceReLayout(forceReLayout + 1);
+      }
     } else {
-      setParseError(graph.error);
+      setParseError(newGraph.error);
     }
   };
 
