@@ -34,7 +34,7 @@ type ParseError = {
 type Element =
   | {
       group: "nodes";
-      data: { id: string; label: string };
+      data: { id: string };
       renderedPosition: { x: number; y: number };
     }
   | { group: "edges"; data: { source: string; target: string } };
@@ -127,11 +127,11 @@ export default function Graph() {
   const width = cyRef.current?.width() ?? 300;
   const height = cyRef.current?.height() ?? 400;
   for (let i = 1; i <= graph.data.n; i++) {
-    const label =
+    const id =
       graph.params.option.indexing === "0-indexed" ? `${i - 1}` : `${i}`;
     elements.push({
       group: "nodes",
-      data: { id: `n${label}`, label },
+      data: { id },
       renderedPosition: {
         x: (Math.random() + 0.5) * (width / 2),
         y: (Math.random() + 0.5) * (height / 2),
@@ -141,7 +141,7 @@ export default function Graph() {
   for (const e of graph.data.edges) {
     elements.push({
       group: "edges",
-      data: { source: `n${e.from}`, target: `n${e.to}` },
+      data: { source: `${e.from}`, target: `${e.to}` },
     });
   }
 
@@ -279,7 +279,7 @@ export default function Graph() {
           {
             selector: "node",
             style: {
-              label: "data(label)",
+              label: "data(id)",
               color: "white",
               "text-halign": "center",
               "text-valign": "center",
