@@ -9,7 +9,7 @@ import CytoscapeComponent from "react-cytoscapejs";
 
 import { VSpace } from "@/components/VSpace";
 import { parseGraph } from "./parse";
-import { prufer_decode } from "./prufer";
+import { pruferDecode } from "./prufer";
 
 const TREE_SIZE_MIN = 1;
 const TreeSize = z.coerce.number().int().min(TREE_SIZE_MIN);
@@ -74,7 +74,7 @@ export default function Graph() {
       for (let i = 0; i < n - 2; i++) {
         code.push(getRandomInt(0, n));
       }
-      const treeEdges = n === 0 ? [] : prufer_decode(code);
+      const treeEdges = n === 0 ? [] : pruferDecode(code);
       const edges = treeEdges.map(([from, to]) => {
         if (indexing === "1-indexed") {
           return { from: from + 1, to: to + 1 };

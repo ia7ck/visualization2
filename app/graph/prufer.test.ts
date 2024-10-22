@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { prufer_decode } from "./prufer";
+import { pruferDecode } from "./prufer";
 
 test.each([
   {
@@ -47,5 +47,5 @@ test.each([
     ],
   },
 ])("$code", ({ code, edges }) => {
-  expect(prufer_decode(code)).toStrictEqual(edges);
+  expect(pruferDecode(code)).toStrictEqual(edges);
 });

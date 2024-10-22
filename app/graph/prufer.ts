@@ -1,6 +1,6 @@
 // https://en.wikipedia.org/wiki/Pr%C3%BCfer_sequence
 
-export function prufer_decode(code: number[]): [number, number][] {
+export function pruferDecode(code: number[]): [number, number][] {
   const n = code.length + 2;
   const deg = new Array(n).fill(1);
   for (const x of code) {
