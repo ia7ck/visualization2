@@ -14,7 +14,7 @@ import { pruferDecode } from "./prufer";
 const TREE_SIZE_MIN = 1;
 const TreeSize = z.coerce.number().int().min(TREE_SIZE_MIN);
 
-const layouts = ["random", "grid", "circle"] as const;
+const layouts = ["random", "grid", "circle", "cose"] as const;
 type Layout = (typeof layouts)[number];
 const indexings = ["0-indexed", "1-indexed"] as const;
 type Indexing = (typeof indexings)[number];
@@ -43,7 +43,9 @@ export default function Graph() {
   const cyRef = useRef<cytoscape.Core>();
   const [graphText, setGraphText] = useState("3\n1 2");
   const [treeSizeText, setTreeSizeText] = useState("");
-  const [layout, setLayout] = useState<Layout>("random");
+  const [layoutOption, setLayoutOption] = useState<{ name: Layout }>({
+    name: "random",
+  });
   const [indexing, setIndexing] = useState<Indexing>("1-indexed");
   const [directed, setDirected] = useState(true);
   // 最後に parse が成功したときのグラフとパラメータ
@@ -52,13 +54,11 @@ export default function Graph() {
     params: { option: { indexing } },
   });
   const [parseError, setParseError] = useState<null | ParseError>(null);
-  // むー　何かおかしい気がする
-  const [forceReLayout, setForceReLayout] = useState(0);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies(forceReLayout): CytoscapeComponent に elements が入ったあとに layout.run を実行する必要がある
+  // CytoscapeComponent に elements が入ったあとに layout.run を実行する必要がある
   useEffect(() => {
-    cyRef.current?.layout({ name: layout }).run();
-  }, [layout, forceReLayout]);
+    cyRef.current?.layout({ ...layoutOption, animate: false }).run();
+  }, [layoutOption]);
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -91,7 +91,7 @@ export default function Graph() {
   };
 
   const handleLayoutChange = (ly: Layout) => {
-    setLayout(ly);
+    setLayoutOption({ name: ly });
   };
 
   const handleIndexingChange = (ind: Indexing) => {
@@ -112,11 +112,13 @@ export default function Graph() {
       setParseError(null);
       // 頂点が増減したときには layout しなおすのがよさそう
       // indexing が変わると頂点 0 が増えたり消えたりする
+      // cose は辺の有無で頂点の配置が変わる
       if (
         newGraph.data.n !== graph.data.n ||
-        option.indexing !== graph.params.option.indexing
+        option.indexing !== graph.params.option.indexing ||
+        layoutOption.name === "cose"
       ) {
-        setForceReLayout(forceReLayout + 1);
+        setLayoutOption({ ...layoutOption });
       }
     } else {
       setParseError(newGraph.error);
@@ -206,7 +208,7 @@ export default function Graph() {
               <input
                 id={ly}
                 type="radio"
-                checked={ly === layout}
+                checked={ly === layoutOption.name}
                 onChange={() => handleLayoutChange(ly)}
                 className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
               />
