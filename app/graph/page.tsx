@@ -74,7 +74,7 @@ export default function Graph() {
       for (let i = 0; i < n - 2; i++) {
         code.push(getRandomInt(0, n));
       }
-      const treeEdges = n === 0 ? [] : pruferDecode(code);
+      const treeEdges = n === TREE_SIZE_MIN ? [] : pruferDecode(code);
       const edges = treeEdges.map(([from, to]) => {
         if (indexing === "1-indexed") {
           return { from: from + 1, to: to + 1 };
