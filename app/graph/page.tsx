@@ -252,7 +252,7 @@ export default function Graph() {
         </legend>
         <VSpace size="S" />
         <Field className="flex items-center">
-          <Label as="span" className="mr-3 text-sm">
+          <Label className="mr-3 text-sm">
             <span className="font-medium text-gray-900">directed</span>
           </Label>
           <Switch
