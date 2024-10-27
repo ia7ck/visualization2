@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     default: "vis2",
     template: "%s - vis2",
   },
+  description: "Algorithm & Data structure visualization",
 };
 
 const inter = Inter({ subsets: ["latin"] });
